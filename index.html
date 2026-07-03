@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bhumi Raksha: Skies of Tomorrow</title>
+  <style>
+    html,body { height:100%; margin:0; background:#071a0f; }
+    #game-container { width:100%; height:100vh; display:flex; align-items:center; justify-content:center; }
+    .center-note { position:absolute; top:8px; left:8px; color:#9ae6b4; font-family:Segoe UI, Arial, sans-serif; }
+  </style>
+</head>
+<body>
+  <div id="game-container"></div>
+  <div class="center-note">Buka `index.html` via server: `python -m http.server`</div>
+
+  <!-- Phaser (global) -->
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+  <!-- App entry (ES module) -->
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

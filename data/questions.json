@@ -1,0 +1,324 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "category": "Efek Rumah Kaca",
+      "question": "Gas rumah kaca utama penyebab pemanasan global adalah?",
+      "options": ["CO2 (Karbon Dioksida)", "O2 (Oksigen)", "N2 (Nitrogen)", "H2O (Uap Air murni)"],
+      "correct": 0,
+      "explanation": "CO2 adalah gas rumah kaca terbesar yang dihasilkan dari pembakaran bahan bakar fosil."
+    },
+    {
+      "id": 2,
+      "category": "Efek Rumah Kaca",
+      "question": "Proses pemantulan panas matahari oleh atmosfer bumi disebut?",
+      "options": ["Efek Rumah Kaca", "Fotosintesis", "Evaporasi", "Kondensasi"],
+      "correct": 0,
+      "explanation": "Efek rumah kaca adalah proses ketika gas di atmosfer menyerap dan memancarkan kembali radiasi inframerah."
+    },
+    {
+      "id": 3,
+      "category": "Efek Rumah Kaca",
+      "question": "Gas metana (CH4) banyak dihasilkan dari sektor?",
+      "options": ["Pertanian dan peternakan", "Industri tekstil", "Pariwisata", "Pendidikan"],
+      "correct": 0,
+      "explanation": "Metana banyak dihasilkan dari fermentasi pencernaan ternak dan sawah padi."
+    },
+    {
+      "id": 4,
+      "category": "Efek Rumah Kaca",
+      "question": "Lapisan di atmosfer yang berfungsi menyerap radiasi UV berbahaya adalah?",
+      "options": ["Lapisan Ozon", "Troposfer", "Stratosfer bawah", "Mesosfer"],
+      "correct": 0,
+      "explanation": "Lapisan ozon di stratosfer melindungi bumi dari radiasi ultraviolet berbahaya dari matahari."
+    },
+    {
+      "id": 5,
+      "category": "Efek Rumah Kaca",
+      "question": "Senyawa CFC (Chlorofluorocarbon) terutama merusak?",
+      "options": ["Lapisan Ozon", "Tanah liat", "Air tanah", "Terumbu karang"],
+      "correct": 0,
+      "explanation": "CFC yang digunakan di AC dan kulkas lama dapat merusak dan menipis lapisan ozon."
+    },
+    {
+      "id": 6,
+      "category": "Efek Rumah Kaca",
+      "question": "Berapa persen kenaikan konsentrasi CO2 atmosfer sejak era pra-industri?",
+      "options": ["Lebih dari 40%", "Kurang dari 5%", "Tepat 10%", "Sekitar 25%"],
+      "correct": 0,
+      "explanation": "Konsentrasi CO2 telah meningkat dari ~280 ppm (pra-industri) menjadi lebih dari 420 ppm saat ini."
+    },
+    {
+      "id": 7,
+      "category": "Efek Rumah Kaca",
+      "question": "Gas N2O (Dinitrogen Oksida) banyak berasal dari?",
+      "options": ["Pupuk nitrogen dan lahan pertanian", "Kendaraan listrik", "Energi surya", "Daur ulang plastik"],
+      "correct": 0,
+      "explanation": "N2O dilepaskan dari tanah yang dipupuki nitrogen dan proses pertanian intensif."
+    },
+    {
+      "id": 8,
+      "category": "Efek Rumah Kaca",
+      "question": "Efek rumah kaca alami bumi sebenarnya penting untuk?",
+      "options": ["Menjaga suhu bumi agar hangat dan layak huni", "Membunuh seluruh organisme", "Mengurangi curah hujan", "Meningkatkan erosi tanah"],
+      "correct": 0,
+      "explanation": "Tanpa efek rumah kaca alami, suhu rata-rata bumi akan sekitar -18°C, terlalu dingin untuk kehidupan."
+    },
+    {
+      "id": 9,
+      "category": "Efek Rumah Kaca",
+      "question": "Hutan tropis berperan penting dalam menyerap gas?",
+      "options": ["CO2", "O3", "N2", "Argon"],
+      "correct": 0,
+      "explanation": "Hutan tropis adalah 'paru-paru bumi' yang menyerap CO2 melalui proses fotosintesis."
+    },
+    {
+      "id": 10,
+      "category": "Efek Rumah Kaca",
+      "question": "Penggundulan hutan (deforestasi) berkontribusi pada peningkatan?",
+      "options": ["Gas CO2 di atmosfer", "Kadar oksigen di laut", "Suhu di kutub selatan", "Jumlah spesies baru"],
+      "correct": 0,
+      "explanation": "Deforestasi melepaskan karbon yang tersimpan di pohon ke atmosfer dan mengurangi penyerapan CO2."
+    },
+    {
+      "id": 11,
+      "category": "Pemanasan Global",
+      "question": "Dampak utama mencairnya es di kutub adalah?",
+      "options": ["Kenaikan permukaan laut", "Penurunan curah hujan", "Peningkatan ozon", "Berkurangnya angin"],
+      "correct": 0,
+      "explanation": "Mencairnya es di Greenland dan Antartika menyebabkan naiknya permukaan laut yang mengancam daerah pesisir."
+    },
+    {
+      "id": 12,
+      "category": "Pemanasan Global",
+      "question": "Perjanjian internasional yang menargetkan pembatasan kenaikan suhu global adalah?",
+      "options": ["Perjanjian Paris (Paris Agreement)", "Protokol Kyoto lama", "Deklarasi Stockholm", "Agenda Rio de Janeiro"],
+      "correct": 0,
+      "explanation": "Paris Agreement 2015 bertujuan membatasi kenaikan suhu global di bawah 2°C, idealnya 1.5°C."
+    },
+    {
+      "id": 13,
+      "category": "Pemanasan Global",
+      "question": "Berapa kenaikan suhu rata-rata bumi yang sudah terjadi sejak era industri?",
+      "options": ["Sekitar 1.1–1.2°C", "Tepat 5°C", "Kurang dari 0.1°C", "Lebih dari 10°C"],
+      "correct": 0,
+      "explanation": "Suhu rata-rata bumi telah meningkat sekitar 1.1-1.2°C di atas tingkat pra-industri."
+    },
+    {
+      "id": 14,
+      "category": "Pemanasan Global",
+      "question": "Pemanasan global menyebabkan kejadian cuaca ekstrem seperti?",
+      "options": ["Badai lebih kuat dan kekeringan lebih parah", "Cuaca lebih sejuk dan stabil", "Berkurangnya bencana alam", "Meningkatnya salju di khatulistiwa"],
+      "correct": 0,
+      "explanation": "Pemanasan global meningkatkan energi di atmosfer, sehingga badai lebih intens dan kekeringan lebih parah."
+    },
+    {
+      "id": 15,
+      "category": "Pemanasan Global",
+      "question": "Fenomena pemutihan (bleaching) terumbu karang disebabkan oleh?",
+      "options": ["Kenaikan suhu laut akibat pemanasan global", "Pengeboran minyak bumi", "Gelombang pasang surut biasa", "Arus laut yang normal"],
+      "correct": 0,
+      "explanation": "Kenaikan suhu laut menyebabkan terumbu karang mengeluarkan alga simbiotiknya sehingga memutih dan mati."
+    },
+    {
+      "id": 16,
+      "category": "Pemanasan Global",
+      "question": "Lautan menyerap berapa persen panas berlebih akibat pemanasan global?",
+      "options": ["Lebih dari 90%", "Kurang dari 10%", "Tepat 50%", "Sekitar 30%"],
+      "correct": 0,
+      "explanation": "Lautan bertindak sebagai penyerap panas terbesar, menyerap lebih dari 90% panas berlebih dari pemanasan global."
+    },
+    {
+      "id": 17,
+      "category": "Pemanasan Global",
+      "question": "Negara penghasil emisi CO2 terbesar di dunia saat ini adalah?",
+      "options": ["China", "Amerika Serikat", "India", "Rusia"],
+      "correct": 0,
+      "explanation": "China saat ini adalah penghasil emisi CO2 terbesar di dunia, diikuti AS dan India."
+    },
+    {
+      "id": 18,
+      "category": "Pemanasan Global",
+      "question": "Permafrost (tanah beku abadi) yang mencair melepaskan gas berbahaya?",
+      "options": ["Metana (CH4)", "Helium (He)", "Neon (Ne)", "Hidrogen murni (H2)"],
+      "correct": 0,
+      "explanation": "Permafrost mengandung banyak bahan organik. Saat mencair, bakteri mengurainya dan melepas metana."
+    },
+    {
+      "id": 19,
+      "category": "Pemanasan Global",
+      "question": "Acidifikasi (pengasaman) laut disebabkan oleh?",
+      "options": ["Penyerapan CO2 oleh lautan", "Pembuangan limbah industri secara langsung", "Penggunaan pestisida pertanian", "Aktivitas vulkanik bawah laut"],
+      "correct": 0,
+      "explanation": "Saat laut menyerap CO2, terbentuk asam karbonat yang menurunkan pH laut."
+    },
+    {
+      "id": 20,
+      "category": "Pemanasan Global",
+      "question": "Apa yang dimaksud dengan carbon footprint?",
+      "options": ["Jumlah total emisi gas rumah kaca yang dihasilkan seseorang/aktivitas", "Jejak kaki yang terbuat dari karbon", "Kandungan karbon dalam batubara", "Metode daur ulang plastik"],
+      "correct": 0,
+      "explanation": "Carbon footprint mengukur total emisi GRK dari aktivitas individu, organisasi, atau produk."
+    },
+    {
+      "id": 21,
+      "category": "SDGs Goal 13",
+      "question": "SDGs Goal 13 berfokus pada penanganan?",
+      "options": ["Perubahan Iklim (Climate Action)", "Kemiskinan", "Kelaparan", "Pendidikan Berkualitas"],
+      "correct": 0,
+      "explanation": "SDGs Goal 13 adalah 'Climate Action' - mengambil tindakan segera untuk memerangi perubahan iklim."
+    },
+    {
+      "id": 22,
+      "category": "SDGs Goal 13",
+      "question": "SDGs (Sustainable Development Goals) terdiri dari berapa tujuan?",
+      "options": ["17 Tujuan", "10 Tujuan", "20 Tujuan", "15 Tujuan"],
+      "correct": 0,
+      "explanation": "SDGs terdiri dari 17 tujuan pembangunan berkelanjutan yang disepakati oleh negara-negara anggota PBB tahun 2015."
+    },
+    {
+      "id": 23,
+      "category": "SDGs Goal 13",
+      "question": "Kapan target SDGs harus dicapai?",
+      "options": ["Tahun 2030", "Tahun 2025", "Tahun 2050", "Tahun 2040"],
+      "correct": 0,
+      "explanation": "Semua 17 tujuan SDGs ditargetkan untuk dicapai pada tahun 2030."
+    },
+    {
+      "id": 24,
+      "category": "SDGs Goal 13",
+      "question": "Salah satu target SDGs Goal 13 adalah meningkatkan?",
+      "options": ["Kapasitas adaptasi dan ketahanan terhadap perubahan iklim", "Produksi minyak bumi", "Penggunaan bahan bakar fosil", "Deforestasi hutan tropis"],
+      "correct": 0,
+      "explanation": "Target 13.1 SDGs adalah memperkuat ketahanan dan kemampuan adaptasi terhadap bahaya iklim di semua negara."
+    },
+    {
+      "id": 25,
+      "category": "SDGs Goal 13",
+      "question": "Net Zero Emission berarti?",
+      "options": ["Emisi yang dihasilkan sama dengan emisi yang diserap/dikurangi", "Tidak ada produksi energi sama sekali", "Seluruh industri ditutup", "Pelarangan kendaraan bermotor"],
+      "correct": 0,
+      "explanation": "Net Zero berarti keseimbangan antara emisi yang dihasilkan dan yang diserap, sehingga total neto adalah nol."
+    },
+    {
+      "id": 26,
+      "category": "SDGs Goal 13",
+      "question": "Aksi nyata untuk mendukung SDGs Goal 13 sehari-hari adalah?",
+      "options": ["Mengurangi penggunaan plastik sekali pakai", "Membeli kendaraan berbahan bakar diesel terbaru", "Meningkatkan pembakaran sampah", "Menggunakan AC dengan freon lama"],
+      "correct": 0,
+      "explanation": "Mengurangi plastik sekali pakai mengurangi emisi produksi plastik dan polusi lingkungan."
+    },
+    {
+      "id": 27,
+      "category": "SDGs Goal 13",
+      "question": "IPCC (Intergovernmental Panel on Climate Change) adalah lembaga yang berperan sebagai?",
+      "options": ["Badan ilmiah PBB yang menilai perubahan iklim", "Bank dunia untuk iklim", "Tentara penjaga hutan", "Perusahaan energi internasional"],
+      "correct": 0,
+      "explanation": "IPCC adalah badan antar pemerintah yang melakukan penilaian ilmiah tentang perubahan iklim untuk PBB."
+    },
+    {
+      "id": 28,
+      "category": "SDGs Goal 13",
+      "question": "Konsep 'Green Economy' dalam konteks SDGs berarti?",
+      "options": ["Ekonomi yang rendah karbon dan efisien sumber daya", "Ekonomi yang berwarna hijau", "Ekonomi pertanian murni", "Ekonomi tanpa teknologi"],
+      "correct": 0,
+      "explanation": "Green Economy adalah sistem ekonomi yang mengurangi risiko lingkungan dan kelangkaan ekologi."
+    },
+    {
+      "id": 29,
+      "category": "SDGs Goal 13",
+      "question": "Apa fungsi dari 'carbon credit'?",
+      "options": ["Mekanisme perdagangan izin emisi karbon antar negara/perusahaan", "Kartu kredit berwarana karbon", "Metode pengukuran polutan udara", "Sumber pendanaan tambangan batu bara"],
+      "correct": 0,
+      "explanation": "Carbon credit adalah izin yang dapat diperdagangkan, di mana setiap kredit mewakili satu ton CO2 yang dapat diemisikan."
+    },
+    {
+      "id": 30,
+      "category": "SDGs Goal 13",
+      "question": "Negara kepulauan kecil (Small Island States) paling rentan terhadap perubahan iklim karena?",
+      "options": ["Ancaman tenggelam akibat naiknya permukaan laut", "Kelebihan air tawar", "Terlalu banyak hutan", "Produksi emisi yang tinggi"],
+      "correct": 0,
+      "explanation": "Negara-negara kepulauan rendah seperti Maladewa dan Tuvalu terancam tenggelam akibat kenaikan permukaan laut."
+    },
+    {
+      "id": 31,
+      "category": "Energi Terbarukan",
+      "question": "Energi yang berasal dari panas bumi disebut?",
+      "options": ["Energi Geothermal", "Energi Angin", "Energi Surya", "Energi Nuklir"],
+      "correct": 0,
+      "explanation": "Energi geothermal memanfaatkan panas dari dalam bumi yang ramah lingkungan dan terbarukan."
+    },
+    {
+      "id": 32,
+      "category": "Energi Terbarukan",
+      "question": "Panel surya (solar panel) mengubah energi matahari menjadi?",
+      "options": ["Energi Listrik", "Energi Kimia", "Energi Mekanik", "Energi Nuklir"],
+      "correct": 0,
+      "explanation": "Panel surya menggunakan efek fotovoltaik untuk mengkonversi cahaya matahari langsung menjadi listrik."
+    },
+    {
+      "id": 33,
+      "category": "Energi Terbarukan",
+      "question": "PLTA (Pembangkit Listrik Tenaga Air) memanfaatkan?",
+      "options": ["Energi kinetik air mengalir", "Panas dari reaksi nuklir", "Angin kencang di pegunungan", "Gas metana dari rawa"],
+      "correct": 0,
+      "explanation": "PLTA memanfaatkan aliran air untuk menggerakkan turbin yang menghasilkan listrik."
+    },
+    {
+      "id": 34,
+      "category": "Energi Terbarukan",
+      "question": "Kendaraan listrik (EV) dianggap lebih ramah lingkungan karena?",
+      "options": ["Tidak menghasilkan emisi gas buang langsung saat dikendarai", "Lebih murah dari kendaraan bensin", "Lebih cepat dari semua kendaraan", "Tidak memerlukan perawatan sama sekali"],
+      "correct": 0,
+      "explanation": "EV tidak menghasilkan emisi dari knalpot, meski emisi tidak langsung tetap tergantung sumber listriknya."
+    },
+    {
+      "id": 35,
+      "category": "Energi Terbarukan",
+      "question": "Bioenergi adalah energi yang berasal dari?",
+      "options": ["Bahan organik (biomassa) seperti tanaman dan limbah", "Reaksi nuklir bintang", "Gerakan benda-benda di luar angkasa", "Rotasi inti bumi"],
+      "correct": 0,
+      "explanation": "Bioenergi menggunakan bahan-bahan biologis seperti kayu, limbah pertanian, dan tanaman energi khusus."
+    },
+    {
+      "id": 36,
+      "category": "Polusi & Limbah",
+      "question": "Plastik di lautan berbahaya karena dapat menjadi?",
+      "options": ["Mikroplastik yang masuk ke rantai makanan", "Makanan bagi ikan laut", "Sumber oksigen bagi terumbu karang", "Pelindung ekosistem laut"],
+      "correct": 0,
+      "explanation": "Plastik terurai menjadi partikel kecil (mikroplastik) yang dimakan ikan dan akhirnya masuk ke tubuh manusia."
+    },
+    {
+      "id": 37,
+      "category": "Polusi & Limbah",
+      "question": "Prinsip 3R dalam pengelolaan sampah adalah?",
+      "options": ["Reduce, Reuse, Recycle", "Remove, Replace, Recover", "Read, Run, Rest", "Repair, Rebuild, Renew"],
+      "correct": 0,
+      "explanation": "3R: Reduce (kurangi), Reuse (gunakan kembali), Recycle (daur ulang) adalah prinsip pengelolaan sampah berkelanjutan."
+    },
+    {
+      "id": 38,
+      "category": "Polusi & Limbah",
+      "question": "Polusi udara indoor (dalam ruangan) terutama disebabkan oleh?",
+      "options": ["Asap rokok, bahan kimia cat, dan jamur", "Sinar matahari yang masuk", "Angin dari luar ruangan", "Suara bising dari jalan"],
+      "correct": 0,
+      "explanation": "Polutan indoor termasuk VOC dari cat dan furnitur, asap rokok, radon, dan spora jamur."
+    },
+    {
+      "id": 39,
+      "category": "Polusi & Limbah",
+      "question": "Sistem pengelolaan sampah terpadu yang paling efektif adalah?",
+      "options": ["Pemilahan sampah di sumber (organik, anorganik, B3)", "Membakar semua sampah", "Membuang ke sungai terdekat", "Mengubur di dalam tanah tanpa diolah"],
+      "correct": 0,
+      "explanation": "Pemilahan sampah di sumber memudahkan daur ulang, komposting, dan pengelolaan limbah berbahaya."
+    },
+    {
+      "id": 40,
+      "category": "Polusi & Limbah",
+      "question": "Emisi kendaraan bermotor yang paling berbahaya bagi kesehatan pernafasan adalah?",
+      "options": ["Partikel halus PM2.5", "Gas Nitrogen murni", "Uap air (H2O)", "Gas Helium (He)"],
+      "correct": 0,
+      "explanation": "PM2.5 adalah partikel sangat halus berdiameter < 2.5 mikrometer yang dapat masuk ke paru-paru dan aliran darah."
+    }
+  ]
+}
