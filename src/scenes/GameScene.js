@@ -20,7 +20,7 @@ export class GameScene extends Phaser.Scene {
         const { width, height } = this.scale;
 
         // Start rotor flight sound
-        this.rotorSound = this.sound.add('baling_baling', { loop: true, volume: 0.35 });
+        this.rotorSound = this.sound.add('baling_baling', { loop: true, volume: 0.10 });
         this.rotorSound.play();
 
         // ============ GAME STATE ============
@@ -354,7 +354,7 @@ export class GameScene extends Phaser.Scene {
     _shootBullet() {
         const { width } = this.scale;
         // Play laser shot sound
-        this.sound.play('laser', { volume: 0.35 });
+        this.sound.play('laser', { volume: 0.65 });
 
         // Draw bullet as graphics
         const bullet = this.add.graphics().setDepth(6);

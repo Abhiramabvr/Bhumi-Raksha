@@ -24,7 +24,7 @@ export class MenuScene extends Phaser.Scene {
     create() {
         // Start background music
         if (!this.sound.get('bgm')) {
-            this.sound.play('bgm', { loop: true, volume: 0.4 });
+            this.sound.play('bgm', { loop: true, volume: 0.65 });
         } else if (!this.sound.get('bgm').isPlaying) {
             this.sound.get('bgm').play();
         }
