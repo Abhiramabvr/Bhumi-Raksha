@@ -1,5 +1,8 @@
-# Large video assets (exceeds GitHub size limit)
-# assets/video/Project_Green_Ascent.mov
+# Large video assets (exceeds GitHub 50MB limit)
+assets/video/Project_Green_Ascent.mov
+
+# Agent workspace customizations
+.agents/
 
 # Operating System Files
 Thumbs.db
