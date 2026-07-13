@@ -1,0 +1,48 @@
+# =============================================================================
+# GitHub Actions: Auto-deploy ke InfinityFree via FTP
+# =============================================================================
+# Workflow ini akan otomatis upload semua file project ke hosting InfinityFree
+# setiap kali ada push ke branch 'main'.
+#
+# SETUP YANG DIPERLUKAN:
+# Buka repo GitHub → Settings → Secrets and variables → Actions → New repository secret
+# Tambahkan 3 secrets berikut:
+#
+#   FTP_SERVER   →  ftpupload.net  (server FTP InfinityFree)
+#   FTP_USERNAME →  username FTP kamu (contoh: epiz_12345678)
+#   FTP_PASSWORD →  password FTP kamu
+#
+# =============================================================================
+
+name: Deploy to InfinityFree
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: 🚀 Upload ke InfinityFree via FTP
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🚀 Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./
+          server-dir: /htdocs/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            docs/**
+            README.md
+            .gitignore
+            .gitattributes
