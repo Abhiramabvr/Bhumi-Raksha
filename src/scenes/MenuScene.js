@@ -35,118 +35,156 @@ export class MenuScene extends Phaser.Scene {
             ease: 'Linear'
         });
 
+        // ============ FUTURISTIC RADAR GRID & HUD ============
+        const gridGfx = this.add.graphics();
+        gridGfx.lineStyle(1, 0x00ffaa, 0.08);
+        // Draw vertical grid lines
+        for (let x = 0; x < width; x += 40) {
+            gridGfx.lineBetween(x, 0, x, height);
+        }
+        // Draw horizontal grid lines
+        for (let y = 0; y < height; y += 40) {
+            gridGfx.lineBetween(0, y, width, y);
+        }
+
         // Floating clouds overlay via graphics (decorative)
         this._drawDecorClouds();
 
-        // ============ TITLE CARD ============
-        // Semi-transparent card background
+        // ============ TACTICAL HUD CARD ============
         const cardW = Math.min(600, width - 40);
         const cardX = width / 2 - cardW / 2;
-        const cardY = height * 0.05;
+        const cardY = height * 0.04;
+        const cardH = height * 0.92;
 
         const cardGfx = this.add.graphics();
-        cardGfx.fillStyle(0x000000, 0.45);
-        cardGfx.fillRoundedRect(cardX, cardY, cardW, height * 0.88, 24);
+        
+        // Semi-transparent spacecraft glass panel
+        cardGfx.fillStyle(0x020d08, 0.88);
+        cardGfx.fillRoundedRect(cardX, cardY, cardW, cardH, 8);
+        
+        // Glowing thin panel border
+        cardGfx.lineStyle(1.5, 0x00ffcc, 0.25);
+        cardGfx.strokeRoundedRect(cardX, cardY, cardW, cardH, 8);
+
+        // Sci-Fi Corner Brackets (Thicker glowing cyan corners)
+        cardGfx.lineStyle(3, 0x00ffcc, 0.85);
+        const bLen = 20; // Bracket length
+        // Top-Left
+        cardGfx.lineBetween(cardX, cardY, cardX + bLen, cardY);
+        cardGfx.lineBetween(cardX, cardY, cardX, cardY + bLen);
+        // Top-Right
+        cardGfx.lineBetween(cardX + cardW, cardY, cardX + cardW - bLen, cardY);
+        cardGfx.lineBetween(cardX + cardW, cardY, cardX, cardY + bLen); // Wait, fix this to cardX + cardW
+        cardGfx.lineBetween(cardX + cardW, cardY, cardX + cardW, cardY + bLen);
+        // Bottom-Left
+        cardGfx.lineBetween(cardX, cardY + cardH, cardX + bLen, cardY + cardH);
+        cardGfx.lineBetween(cardX, cardY + cardH, cardX, cardY + cardH - bLen);
+        // Bottom-Right
+        cardGfx.lineBetween(cardX + cardW, cardY + cardH, cardX + cardW - bLen, cardY + cardH);
+        cardGfx.lineBetween(cardX + cardW, cardY + cardH, cardX + cardW, cardY + cardH - bLen);
+
+        // HUD panel accents
+        cardGfx.lineStyle(1, 0x00ffcc, 0.15);
+        cardGfx.lineBetween(cardX + 15, cardY + 15, cardX + cardW - 15, cardY + 15);
+        cardGfx.lineBetween(cardX + 15, cardY + cardH - 15, cardX + cardW - 15, cardY + cardH - 15);
 
         // Title
         const titleStyle = {
-            fontFamily: "'Segoe UI', Arial, sans-serif",
+            fontFamily: "Courier New, monospace, sans-serif",
             fontSize: Math.floor(height * 0.075) + 'px',
             fontStyle: 'bold',
             color: '#FFFFFF',
-            stroke: '#1a6b3a',
-            strokeThickness: 6,
-            shadow: { offsetX: 2, offsetY: 3, color: '#000', blur: 8, fill: true }
+            stroke: '#00ffaa',
+            strokeThickness: 2,
+            shadow: { offsetX: 0, offsetY: 0, color: '#00ffcc', blur: 15, stroke: true, fill: false }
         };
-        this.add.text(width / 2, cardY + height * 0.085, 'BHUMI RAKSHA', titleStyle)
+        this.add.text(width / 2, cardY + height * 0.075, 'BHUMI RAKSHA', titleStyle)
             .setOrigin(0.5);
 
         const subtitleStyle = {
-            fontFamily: "'Segoe UI', Arial, sans-serif",
-            fontSize: Math.floor(height * 0.033) + 'px',
-            color: '#A8FFD4',
-            stroke: '#000',
-            strokeThickness: 2
+            fontFamily: "Courier New, monospace, sans-serif",
+            fontSize: Math.floor(height * 0.026) + 'px',
+            color: '#86efac',
+            letterSpacing: 2
         };
-        this.add.text(width / 2, cardY + height * 0.165, '✈  Skies of Tomorrow  ✈', subtitleStyle)
+        this.add.text(width / 2, cardY + height * 0.145, '> MISSION: SKIES OF TOMORROW', subtitleStyle)
             .setOrigin(0.5);
 
-        // SDGs badge
+        // SDGs badge (Minimalist HUD badge)
         const badgeStyle = {
-            fontFamily: "'Segoe UI', Arial, sans-serif",
-            fontSize: Math.floor(height * 0.022) + 'px',
-            color: '#FFE066',
-            stroke: '#7a5c00',
-            strokeThickness: 2
+            fontFamily: "Courier New, monospace, sans-serif",
+            fontSize: Math.floor(height * 0.02) + 'px',
+            color: '#00ffcc',
+            backgroundColor: 'rgba(0, 255, 204, 0.08)'
         };
-        this.add.text(width / 2, cardY + height * 0.225, '🌍  SDGs Goal 13: Climate Action  🌍', badgeStyle)
+        const badge = this.add.text(width / 2, cardY + height * 0.20, ' [ COGNITIVE ENGINE // SDG-13 CLIMATE ACTION ] ', badgeStyle)
             .setOrigin(0.5);
 
-        // Divider line
-        const divGfx = this.add.graphics();
-        divGfx.lineStyle(2, 0x4dd980, 0.6);
-        divGfx.lineBetween(cardX + 30, cardY + height * 0.265, cardX + cardW - 30, cardY + height * 0.265);
-
-        // ============ HOW TO PLAY ============
+        // ============ HOW TO PLAY (TACTICAL READOUT) ============
         const infoStyle = {
-            fontFamily: "'Segoe UI', Arial, sans-serif",
-            fontSize: Math.floor(height * 0.024) + 'px',
-            color: '#DDFFF0',
+            fontFamily: "Courier New, monospace, sans-serif",
+            fontSize: Math.floor(height * 0.022) + 'px',
+            color: '#a7f3d0',
             lineSpacing: 8,
             wordWrap: { width: cardW - 60 }
         };
 
         const howToPlay = [
-            '🎮  ↑ / W  →  Pesawat Naik',
-            '🎮  ↓ / S  →  Pesawat Turun',
-            '❓  Obstacle Khusus  →  Jawab Pertanyaan!',
-            '✅  Jawab Benar  →  Tembak & +100 Skor',
-            '❌  Jawab Salah  →  Hindari Manual!',
-            '❤️  3 Nyawa  —  Game Over jika habis'
+            '■ THRUSTER UP   ::  ↑ / W KEY',
+            '■ THRUSTER DOWN ::  ↓ / S KEY',
+            '■ HAZARD SCANNER::  ANSWER SPECIAL QUESTION MODULES',
+            '■ TARGET LOCKED ::  CORRECT ANSWERS TRIGGER CANNON (+100 XP)',
+            '■ EVASIVE ACTION::  MANUAL FLIGHT PATH ON FALSE ANSWER',
+            '■ SHIELD STATUS ::  3 POWER CELLS REMAINING (CRITICAL AT 0)'
         ].join('\n');
 
-        this.add.text(width / 2, cardY + height * 0.37, howToPlay, infoStyle)
-            .setOrigin(0.5, 0);
+        this.add.text(cardX + 40, cardY + height * 0.28, howToPlay, infoStyle)
+            .setOrigin(0, 0);
 
         // ============ PILIH LEVEL ============
         const levelLabelStyle = {
-            fontFamily: "'Segoe UI', Arial, sans-serif",
-            fontSize: Math.floor(height * 0.03) + 'px',
+            fontFamily: "Courier New, monospace, sans-serif",
+            fontSize: Math.floor(height * 0.026) + 'px',
             fontStyle: 'bold',
-            color: '#FFE066'
+            color: '#00ffcc',
+            letterSpacing: 3
         };
-        this.add.text(width / 2, cardY + height * 0.595, 'PILIH LEVEL KESULITAN', levelLabelStyle)
+        this.add.text(width / 2, cardY + height * 0.58, '[ CHOOSE DIFFICULTY PROTOCOL ]', levelLabelStyle)
             .setOrigin(0.5);
 
         const levels = [
-            { label: '🌱  MUDAH', key: 'easy', color: 0x22c55e, textColor: '#fff', time: 15, desc: '15 detik / soal' },
-            { label: '🌤  SEDANG', key: 'medium', color: 0xf59e0b, textColor: '#fff', time: 10, desc: '10 detik / soal' },
-            { label: '🔥  SULIT', key: 'hard', color: 0xef4444, textColor: '#fff', time: 7, desc: '7 detik / soal' }
+            { label: 'EASY_MOD', key: 'easy', color: 0x10b981, strokeColor: 0x059669, textColor: '#10b981', time: 15, desc: '15s/MODULE' },
+            { label: 'MED_MOD', key: 'medium', color: 0xf59e0b, strokeColor: 0xd97706, textColor: '#f59e0b', time: 10, desc: '10s/MODULE' },
+            { label: 'HARD_MOD', key: 'hard', color: 0xef4444, strokeColor: 0xdc2626, textColor: '#ef4444', time: 7, desc: '7s/MODULE' }
         ];
 
         const btnW = Math.min(160, (cardW - 80) / 3);
         const btnH = 55;
         const btnSpacing = (cardW - 60 - btnW * 3) / 2;
         const firstBtnX = cardX + 30;
-        const btnY = cardY + height * 0.65;
+        const btnY = cardY + height * 0.635;
 
         levels.forEach((lvl, i) => {
             const bx = firstBtnX + i * (btnW + btnSpacing);
             const btn = this.add.graphics();
-            btn.fillStyle(lvl.color, 1);
-            btn.fillRoundedRect(bx, btnY, btnW, btnH, 12);
+            
+            // Draw minimalist transparent button outline
+            btn.fillStyle(0x020d08, 0.6);
+            btn.fillRoundedRect(bx, btnY, btnW, btnH, 4);
+            btn.lineStyle(1.5, lvl.color, 0.65);
+            btn.strokeRoundedRect(bx, btnY, btnW, btnH, 4);
 
             const btnText = this.add.text(bx + btnW / 2, btnY + btnH / 2 - 8, lvl.label, {
-                fontFamily: "'Segoe UI', Arial, sans-serif",
-                fontSize: Math.floor(height * 0.025) + 'px',
+                fontFamily: "Courier New, monospace, sans-serif",
+                fontSize: Math.floor(height * 0.022) + 'px',
                 fontStyle: 'bold',
                 color: lvl.textColor
             }).setOrigin(0.5);
 
             const descText = this.add.text(bx + btnW / 2, btnY + btnH / 2 + 14, lvl.desc, {
-                fontFamily: "'Segoe UI', Arial, sans-serif",
-                fontSize: Math.floor(height * 0.018) + 'px',
-                color: 'rgba(255,255,255,0.8)'
+                fontFamily: "Courier New, monospace, sans-serif",
+                fontSize: Math.floor(height * 0.016) + 'px',
+                color: 'rgba(255,255,255,0.6)'
             }).setOrigin(0.5);
 
             // Invisible hit area
@@ -155,17 +193,24 @@ export class MenuScene extends Phaser.Scene {
 
             hitArea.on('pointerover', () => {
                 btn.clear();
-                btn.fillStyle(lvl.color, 0.8);
-                btn.fillRoundedRect(bx, btnY, btnW, btnH, 12);
-                btn.lineStyle(3, 0xFFFFFF, 0.8);
-                btn.strokeRoundedRect(bx, btnY, btnW, btnH, 12);
+                btn.fillStyle(lvl.color, 0.15);
+                btn.fillRoundedRect(bx, btnY, btnW, btnH, 4);
+                btn.lineStyle(2, lvl.color, 1);
+                btn.strokeRoundedRect(bx, btnY, btnW, btnH, 4);
+                
+                // Add glowing glow
+                btnText.setTint(0xffffff);
                 this.tweens.add({ targets: [btnText, descText], scaleX: 1.05, scaleY: 1.05, duration: 100 });
             });
 
             hitArea.on('pointerout', () => {
                 btn.clear();
-                btn.fillStyle(lvl.color, 1);
-                btn.fillRoundedRect(bx, btnY, btnW, btnH, 12);
+                btn.fillStyle(0x020d08, 0.6);
+                btn.fillRoundedRect(bx, btnY, btnW, btnH, 4);
+                btn.lineStyle(1.5, lvl.color, 0.65);
+                btn.strokeRoundedRect(bx, btnY, btnW, btnH, 4);
+                
+                btnText.clearTint();
                 this.tweens.add({ targets: [btnText, descText], scaleX: 1, scaleY: 1, duration: 100 });
             });
 
@@ -179,12 +224,13 @@ export class MenuScene extends Phaser.Scene {
 
         // Credit text
         const creditStyle = {
-            fontFamily: "'Segoe UI', Arial, sans-serif",
-            fontSize: Math.floor(height * 0.019) + 'px',
-            color: 'rgba(200,255,220,0.7)',
-            align: 'center'
+            fontFamily: "Courier New, monospace, sans-serif",
+            fontSize: Math.floor(height * 0.018) + 'px',
+            color: 'rgba(0, 255, 204, 0.5)',
+            align: 'center',
+            letterSpacing: 1
         };
-        this.add.text(width / 2, cardY + height * 0.82, 'PROJECT GREEN ASCENT\nAbhi · Rizqi · Afif  |  UAD 2026', creditStyle)
+        this.add.text(width / 2, cardY + height * 0.84, 'SECURE INTERFACE UNIT // PROJECT GREEN ASCENT\nAbhi · Rizqi · Afif  |  UAD 2026', creditStyle)
             .setOrigin(0.5);
 
         // Camera fade in

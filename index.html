@@ -4,19 +4,191 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bhumi Raksha: Skies of Tomorrow</title>
-  <style>
-    html,body { height:100%; margin:0; background:#071a0f; }
-    #game-container { width:100%; height:100vh; display:flex; align-items:center; justify-content:center; }
-    .center-note { position:absolute; top:8px; left:8px; color:#9ae6b4; font-family:Segoe UI, Arial, sans-serif; }
-  </style>
+  <!-- Linked clean external stylesheet -->
+  <link rel="stylesheet" href="./assets/css/style.css" />
 </head>
 <body>
-  <div id="game-container"></div>
-  <div class="center-note">Buka `index.html` via server: `python -m http.server`</div>
+  <!-- Landing Screen Overlay -->
+  <div id="landing-screen">
+    <div class="landing-grid"></div>
+    
+    <div class="landing-header">
+      <div class="landing-subtitle">// GLOBAL CLIMATE RECON MISSION //</div>
+      <h1 class="landing-title">SDGs 13: CLIMATE ACTION</h1>
+    </div>
+
+    <!-- Centered Cinematic Video Frame -->
+    <div class="video-frame-container">
+      <div class="frame-bracket bracket-tl"></div>
+      <div class="frame-bracket bracket-tr"></div>
+      <div class="frame-bracket bracket-bl"></div>
+      <div class="frame-bracket bracket-br"></div>
+      <video id="landing-video-player" autoplay muted playsinline controls src="./assets/video/Project_Green_Ascent.mov">
+      </video>
+    </div>
+
+    <!-- Action Section -->
+    <div class="landing-action">
+      <button class="play-button-cyber" id="play-btn">PLAY BHUMI RAKSHA</button>
+      <div class="landing-footer-log">System state: ready // Connection secured</div>
+    </div>
+  </div>
+
+  <div id="app-layout">
+    <!-- Left Sidebar: Telemetry -->
+    <div id="sidebar-left" class="sidebar scanlines">
+      <div class="sidebar-header">[ telemetry ]</div>
+      
+      <div class="hud-box warning">
+        <div class="hud-label">> CLIMATE ANOMALY DETECTED</div>
+        <div class="hud-value">CO2: 421 PPM</div>
+        <div class="hud-desc">CRITICAL VALUE EXCEEDS THE STABLE LEVEL (350 PPM)</div>
+      </div>
+
+      <div class="hud-box">
+        <div class="hud-label">> GLOBAL TEMP INCREASE</div>
+        <div class="hud-value">+1.15 °C</div>
+        <div class="hud-bar">
+          <div class="fill" style="width: 76%; background: #fbbf24; box-shadow: 0 0 8px #fbbf24;"></div>
+        </div>
+      </div>
+
+      <div class="hud-box">
+        <div class="hud-label">> ICE SHEET MASS REDUCTION</div>
+        <div class="hud-value">-427 GT/YR</div>
+        <div class="hud-bar">
+          <div class="fill" style="width: 82%; background: #ef4444; box-shadow: 0 0 8px #ef4444;"></div>
+        </div>
+      </div>
+
+      <div class="hud-box">
+        <div class="hud-label">> OCEAN TEMPERATURE TREND</div>
+        <div class="hud-value">+0.88 °C</div>
+        <div class="hud-desc">Warming accelerates sea level rise and severe weather events.</div>
+      </div>
+    </div>
+
+    <!-- Center: The Phaser Game -->
+    <div id="game-container-wrapper">
+      <div id="game-container"></div>
+    </div>
+
+    <!-- Right Sidebar: Mission Info & Promotional Frame -->
+    <div id="sidebar-right" class="sidebar scanlines">
+      <div class="sidebar-header">[ mission deck ]</div>
+
+      <div class="hud-box">
+        <div class="hud-label">> COGNITIVE UNIT</div>
+        <div class="hud-value">SDG-13 ADVOCACY</div>
+        <div class="hud-desc">Pilot the craft safely. Destroy chemical hazard blocks by answering climate action questions accurately.</div>
+      </div>
+
+      <div class="hud-box">
+        <div class="hud-label">> PROPULSION & SHIELDS</div>
+        <div class="hud-desc">
+          W/S or UP/DOWN keys to guide flight path.<br>
+          Shields: 3 Units.
+        </div>
+      </div>
+
+      <div class="hud-box" style="margin-top: auto;">
+        <div class="hud-label">> DEVELOPED BY</div>
+        <div class="hud-value" style="font-size: 14px;">GREEN ASCENT</div>
+        <div class="hud-desc">
+          Abhi · Rizqi · Afif<br>
+          Universitas Ahmad Dahlan 2026<br>
+          <br>
+          <span style="color: #00ffcc; text-shadow: 0 0 5px #00ffcc;">> CLIMATE ACTION NOW</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Phaser (global) -->
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
-  <!-- App entry (ES module) -->
-  <script type="module" src="./src/main.js"></script>
+  <!-- App entry (ES module) with cache buster -->
+  <script type="module" src="./src/main.js?v=1.0.1"></script>
+
+  <!-- Landing Screen Transition & Fallback Handler Script -->
+  <script>
+    // Transition to game
+    document.getElementById('play-btn').addEventListener('click', () => {
+      const screen = document.getElementById('landing-screen');
+      screen.style.transition = 'opacity 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1)';
+      screen.style.opacity = '0';
+      screen.style.transform = 'scale(1.08)';
+      setTimeout(() => {
+        screen.style.display = 'none';
+      }, 600);
+    });
+
+    // Web Audio API Volume Booster to increase sound level beyond 100%
+    let audioCtx = null;
+    let source = null;
+    let gainNode = null;
+
+    function boostVolume(videoElement, multiplier) {
+      try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContextClass();
+        source = audioCtx.createMediaElementSource(videoElement);
+        gainNode = audioCtx.createGain();
+        
+        // Boost gain (e.g. 2.5 = 250% volume boost)
+        gainNode.gain.value = multiplier;
+        
+        source.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        console.log("Audio boost enabled: " + (multiplier * 100) + "%");
+      } catch (e) {
+        console.warn("Web Audio API Volume Booster error:", e);
+      }
+    }
+
+    // Handle missing/codec unsupported video fallback automatically
+    window.addEventListener('load', () => {
+      const video = document.getElementById('landing-video-player');
+      const localUrl = "./assets/video/Project_Green_Ascent.mov";
+      const fallbackUrl = "https://assets.mixkit.co/videos/preview/mixkit-earth-spinning-in-space-11116-large.mp4";
+
+      // Initialize volume booster on first user click to satisfy browser security policies
+      const enableAudioBoost = () => {
+        if (!audioCtx) {
+          boostVolume(video, 5.0); // Boost volume to 500% (2x louder than before)
+        } else if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+      };
+      document.addEventListener('click', enableAudioBoost);
+      document.addEventListener('keydown', enableAudioBoost);
+
+      // Test if local video file exists on the server before trying to play it
+      fetch(localUrl, { method: 'HEAD' })
+        .then(response => {
+          if (response.ok) {
+            console.log("Local video file found! Loading Project_Green_Ascent.mov");
+            video.src = localUrl;
+            video.load();
+            video.play().catch(err => {
+              console.warn("Local video playback blocked or unsupported codec. Reverting to online fallback.", err);
+              video.src = fallbackUrl;
+              video.load();
+              video.play().catch(e => console.log(e));
+            });
+          } else {
+            console.log("Local video file not found. Playing default online fallback video.");
+            video.src = fallbackUrl;
+            video.load();
+            video.play().catch(e => console.log(e));
+          }
+        })
+        .catch(err => {
+          console.warn("Failed to check local video path. Playing default online fallback video.", err);
+          video.src = fallbackUrl;
+          video.load();
+          video.play().catch(e => console.log(e));
+        });
+    });
+  </script>
 </body>
 </html>

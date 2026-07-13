@@ -26,6 +26,9 @@ export class GameScene extends Phaser.Scene {
         this.totalQuestionsAsked = 0;
         this.isGameOver = false;
         this.questionActive = false;
+        this._paused = false;
+        this.bulletsLeft = 5;
+        this.gasProjectiles = [];
 
         // Speed settings per difficulty
         const speedMap = { easy: 220, medium: 300, hard: 400 };
@@ -74,7 +77,24 @@ export class GameScene extends Phaser.Scene {
             up: Phaser.Input.Keyboard.KeyCodes.UP,
             down: Phaser.Input.Keyboard.KeyCodes.DOWN,
             w: Phaser.Input.Keyboard.KeyCodes.W,
-            s: Phaser.Input.Keyboard.KeyCodes.S
+            s: Phaser.Input.Keyboard.KeyCodes.S,
+            space: Phaser.Input.Keyboard.KeyCodes.SPACE,
+            p: Phaser.Input.Keyboard.KeyCodes.P
+        });
+
+        // Listen to space key for shooting
+        this.input.keyboard.on('keydown-SPACE', () => {
+            if (this.isGameOver || this._paused || this.questionActive) return;
+            if (this.bulletsLeft > 0) {
+                this.bulletsLeft--;
+                this._shootBullet();
+                this._updateAmmoHUD();
+            }
+        });
+
+        // Listen to P key for pause
+        this.input.keyboard.on('keydown-P', () => {
+            this._togglePause();
         });
 
         // Touch controls
@@ -94,7 +114,7 @@ export class GameScene extends Phaser.Scene {
         this.scoreTick = this.time.addEvent({
             delay: 1000,
             callback: () => {
-                if (!this.isGameOver && !this.questionActive) {
+                if (!this.isGameOver && !this.questionActive && !this._paused) {
                     this._addScore(5);
                 }
             },
@@ -129,6 +149,16 @@ export class GameScene extends Phaser.Scene {
             this.lifeTexts.push(heart);
         }
 
+        // Ammo Display
+        this.ammoLabel = this.add.text(120, 15, '⚡ LASER: 5/5', {
+            fontFamily: "'Courier New', monospace, sans-serif",
+            fontSize: '16px',
+            fontStyle: 'bold',
+            color: '#00ffcc',
+            stroke: '#000',
+            strokeThickness: 2
+        }).setDepth(21);
+
         // Score
         this.scoreLabel = this.add.text(width / 2, 5, 'SKOR: 0', {
             fontFamily: "'Segoe UI', Arial, sans-serif",
@@ -154,7 +184,21 @@ export class GameScene extends Phaser.Scene {
         const pauseBtn = this.add.text(width - 10, 48, '⏸', {
             fontSize: '20px'
         }).setOrigin(1, 1).setDepth(21).setInteractive({ useHandCursor: true });
-        pauseBtn.on('pointerdown', () => this._togglePause());
+        pauseBtn.on('pointerdown', (pointer, localX, localY, event) => {
+            event.stopPropagation();
+            this._togglePause();
+        });
+    }
+
+    _updateAmmoHUD() {
+        if (this.ammoLabel) {
+            this.ammoLabel.setText(`⚡ LASER: ${this.bulletsLeft}/5`);
+            if (this.bulletsLeft === 0) {
+                this.ammoLabel.setColor('#ef4444');
+            } else {
+                this.ammoLabel.setColor('#00ffcc');
+            }
+        }
     }
 
     _setupTouchControls(width, height) {
@@ -188,7 +232,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     _spawnObstacle() {
-        if (this.isGameOver || this.questionActive) return;
+        if (this.isGameOver || this.questionActive || this._paused) return;
         const { width, height } = this.scale;
 
         // 40% chance of special obstacle (with question)
@@ -227,6 +271,9 @@ export class GameScene extends Phaser.Scene {
                 fontSize: '18px'
             }).setDepth(6);
             obsData.qMark = qMark;
+        } else {
+            // Pollution monster fires gas bullets
+            obsData.nextFireTime = this.time.now + Phaser.Math.Between(1000, 2000);
         }
 
         this.obstacles.push(obsData);
@@ -328,6 +375,8 @@ export class GameScene extends Phaser.Scene {
             let points = 100;
             if (gotBonus) points += 50;
             this._addScore(points);
+            this.bulletsLeft = 5; // reload bullets
+            this._updateAmmoHUD();
             this._shootBullet();
         }
         // If wrong, the special obstacle continues to move (player must dodge)
@@ -365,6 +414,10 @@ export class GameScene extends Phaser.Scene {
             this.tweens.killTweensOf(o.img);
         });
 
+        // Destroy gas projectiles
+        this.gasProjectiles.forEach(p => p.gfx.destroy());
+        this.gasProjectiles = [];
+
         // Flash screen then go to score
         this.cameras.main.flash(500, 200, 0, 0);
         this.time.delayedCall(800, () => {
@@ -383,31 +436,44 @@ export class GameScene extends Phaser.Scene {
     }
 
     _togglePause() {
-        // Simple pause overlay
+        if (this.isGameOver) return;
+        
         if (this._paused) {
             this._paused = false;
-            this._pauseOverlay?.destroy();
-            this._pauseOverlay = null;
-            this.physics.resume?.();
+            if (this._pauseText) { this._pauseText.destroy(); this._pauseText = null; }
+            if (this._pauseOverlay) { this._pauseOverlay.destroy(); this._pauseOverlay = null; }
             this.obstacleTimer.paused = false;
+            this.scoreTick.paused = false;
         } else {
             this._paused = true;
             this.obstacleTimer.paused = true;
+            this.scoreTick.paused = true;
+            
             const { width, height } = this.scale;
             this._pauseOverlay = this.add.graphics().setDepth(100);
-            this._pauseOverlay.fillStyle(0x000000, 0.7);
+            this._pauseOverlay.fillStyle(0x000000, 0.75);
             this._pauseOverlay.fillRect(0, 0, width, height);
-            this.add.text(width / 2, height / 2, '⏸ JEDA\n\nKlik atau tekan P untuk melanjutkan', {
-                fontFamily: "'Segoe UI', Arial, sans-serif",
-                fontSize: '28px',
+
+            this._pauseText = this.add.text(width / 2, height / 2, '⏸ JEDA\n\nTekan P atau Klik Layar untuk Melanjutkan', {
+                fontFamily: "Courier New, monospace, sans-serif",
+                fontSize: '24px',
                 fontStyle: 'bold',
-                color: '#ffffff',
+                color: '#00ffcc',
                 align: 'center'
             }).setOrigin(0.5).setDepth(101);
 
-            // Click anywhere to resume
-            this.input.once('pointerdown', () => this._togglePause());
-            this.input.keyboard.once('keydown-P', () => this._togglePause());
+            // Small delay to prevent catching the click that triggered pause
+            this.time.delayedCall(150, () => {
+                if (this._paused) {
+                    this.input.once('pointerdown', this._resumeFromClick, this);
+                }
+            });
+        }
+    }
+
+    _resumeFromClick() {
+        if (this._paused) {
+            this._togglePause();
         }
     }
 
@@ -462,6 +528,32 @@ export class GameScene extends Phaser.Scene {
             return true;
         });
 
+        // ============ GAS PROJECTILES ============
+        const gasSpeed = this.gameSpeed * 1.5;
+        this.gasProjectiles = this.gasProjectiles.filter(p => {
+            p.gfx.x -= gasSpeed * dt;
+
+            // check collision with player
+            if (!this.questionActive) {
+                const dx = Math.abs(this.player.x - p.gfx.x);
+                const dy = Math.abs(this.player.y - p.gfx.y);
+                const playerHW = this.player.displayWidth * 0.35;
+                const playerHH = this.player.displayHeight * 0.35;
+                if (dx < playerHW + 8 && dy < playerHH + 8) {
+                    this._explodeObstacle(p.gfx.x, p.gfx.y);
+                    p.gfx.destroy();
+                    this._loseLife();
+                    return false;
+                }
+            }
+
+            if (p.gfx.x < -50) {
+                p.gfx.destroy();
+                return false;
+            }
+            return true;
+        });
+
         // ============ OBSTACLES ============
         for (let i = this.obstacles.length - 1; i >= 0; i--) {
             const o = this.obstacles[i];
@@ -472,6 +564,21 @@ export class GameScene extends Phaser.Scene {
             if (o.qMark) {
                 o.qMark.x = o.img.x;
                 o.qMark.y = o.img.y - o.img.displayHeight / 2 - 15;
+            }
+
+            // Let the pollution monster shoot gas projectiles
+            if (!o.isSpecial && this.time.now > o.nextFireTime && o.img.x > width * 0.25 && o.img.x < width + 50) {
+                o.nextFireTime = this.time.now + Phaser.Math.Between(1500, 3000);
+                
+                const gasGfx = this.add.graphics().setDepth(5);
+                gasGfx.fillStyle(0x3a3a3a, 0.95);
+                gasGfx.fillCircle(0, 0, 9);
+                gasGfx.fillStyle(0xef4444, 0.7);
+                gasGfx.fillCircle(0, 0, 4);
+                gasGfx.x = o.img.x - o.halfW;
+                gasGfx.y = o.img.y;
+                
+                this.gasProjectiles.push({ gfx: gasGfx });
             }
 
             // Check bullet collision
