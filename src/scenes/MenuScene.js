@@ -11,9 +11,24 @@ export class MenuScene extends Phaser.Scene {
         this.load.image('plane', './assets/images/plane.png');
         this.load.image('obstacle_factory', './assets/images/obstacle_factory.png');
         this.load.image('obstacle_cloud', './assets/images/obstacle_cloud.png');
+
+        // Load audio assets
+        this.load.audio('baling_baling', './assets/audio/BALING BALING.mp3');
+        this.load.audio('game_over', './assets/audio/GAME OVER.mp3');
+        this.load.audio('bgm', './assets/audio/Lensko - Cetus  House  NCS - Copyright Free Music.mp3');
+        this.load.audio('laser', './assets/audio/LASER TEMBAK.mp3');
+        this.load.audio('benar', './assets/audio/SOUND BENAR.mp3');
+        this.load.audio('salah', './assets/audio/SOUND SALAH.mp3');
     }
 
     create() {
+        // Start background music
+        if (!this.sound.get('bgm')) {
+            this.sound.play('bgm', { loop: true, volume: 0.4 });
+        } else if (!this.sound.get('bgm').isPlaying) {
+            this.sound.get('bgm').play();
+        }
+
         const { width, height } = this.scale;
 
         // Scrolling background
