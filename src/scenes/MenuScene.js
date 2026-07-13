@@ -15,7 +15,7 @@ export class MenuScene extends Phaser.Scene {
         // Load audio assets
         this.load.audio('baling_baling', './assets/audio/BALING BALING.mp3');
         this.load.audio('game_over', './assets/audio/GAME OVER.mp3');
-        this.load.audio('bgm', './assets/audio/Gaming Background.mp3');
+        this.load.audio('bgm', './assets/audio/Lensko - Cetus  House  NCS - Copyright Free Music.mp3');
         this.load.audio('laser', './assets/audio/LASER TEMBAK.mp3');
         this.load.audio('benar', './assets/audio/SOUND BENAR.mp3');
         this.load.audio('salah', './assets/audio/SOUND SALAH.mp3');
