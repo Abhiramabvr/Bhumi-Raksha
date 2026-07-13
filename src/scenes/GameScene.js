@@ -19,6 +19,10 @@ export class GameScene extends Phaser.Scene {
     async create() {
         const { width, height } = this.scale;
 
+        // Start rotor flight sound
+        this.rotorSound = this.sound.add('baling_baling', { loop: true, volume: 0.35 });
+        this.rotorSound.play();
+
         // ============ GAME STATE ============
         this.lives = 3;
         this.score = 0;
@@ -348,6 +352,9 @@ export class GameScene extends Phaser.Scene {
 
     _shootBullet() {
         const { width } = this.scale;
+        // Play laser shot sound
+        this.sound.play('laser', { volume: 0.35 });
+
         // Draw bullet as graphics
         const bullet = this.add.graphics().setDepth(6);
         bullet.fillStyle(0x86efac, 1);
@@ -406,70 +413,88 @@ export class GameScene extends Phaser.Scene {
         if (this.isGameOver) return;
         this.isGameOver = true;
 
+        // Stop sounds
+        const bgm = this.sound.get('bgm');
+        if (bgm) bgm.stop();
+        if (this.rotorSound) this.rotorSound.stop();
+
+        // Play game over sound
+        this.sound.play('game_over', { volume: 0.6 });
+
         this.obstacleTimer.remove();
         this.scoreTick.remove();
+ 
+         // Stop all tweens on obstacles
+         this.obstacles.forEach(o => {
+             this.tweens.killTweensOf(o.img);
+         });
+ 
+         // Destroy gas projectiles
+         this.gasProjectiles.forEach(p => p.gfx.destroy());
+         this.gasProjectiles = [];
+ 
+         // Flash screen then go to score
+         this.cameras.main.flash(500, 200, 0, 0);
+         this.time.delayedCall(800, () => {
+             this.cameras.main.fadeOut(500, 0, 0, 0);
+             this.time.delayedCall(500, () => {
+                 this.scene.stop('QuestionScene');
+                 this.scene.start('ScoreScene', {
+                     score: this.score,
+                     correctAnswers: this.correctAnswers,
+                     totalQuestions: this.totalQuestionsAsked,
+                     difficulty: this.difficulty,
+                     questionTime: this.questionTime
+                 });
+             });
+         });
+     }
+ 
+     _togglePause() {
+         if (this.isGameOver) return;
+         
+         if (this._paused) {
+             this._paused = false;
+             if (this._pauseText) { this._pauseText.destroy(); this._pauseText = null; }
+             if (this._pauseOverlay) { this._pauseOverlay.destroy(); this._pauseOverlay = null; }
+             this.obstacleTimer.paused = false;
+             this.scoreTick.paused = false;
 
-        // Stop all tweens on obstacles
-        this.obstacles.forEach(o => {
-            this.tweens.killTweensOf(o.img);
-        });
+             // Resume rotor sound
+             if (this.rotorSound && this.rotorSound.isPaused) {
+                 this.rotorSound.resume();
+             }
+         } else {
+             this._paused = true;
+             this.obstacleTimer.paused = true;
+             this.scoreTick.paused = true;
 
-        // Destroy gas projectiles
-        this.gasProjectiles.forEach(p => p.gfx.destroy());
-        this.gasProjectiles = [];
-
-        // Flash screen then go to score
-        this.cameras.main.flash(500, 200, 0, 0);
-        this.time.delayedCall(800, () => {
-            this.cameras.main.fadeOut(500, 0, 0, 0);
-            this.time.delayedCall(500, () => {
-                this.scene.stop('QuestionScene');
-                this.scene.start('ScoreScene', {
-                    score: this.score,
-                    correctAnswers: this.correctAnswers,
-                    totalQuestions: this.totalQuestionsAsked,
-                    difficulty: this.difficulty,
-                    questionTime: this.questionTime
-                });
-            });
-        });
-    }
-
-    _togglePause() {
-        if (this.isGameOver) return;
-        
-        if (this._paused) {
-            this._paused = false;
-            if (this._pauseText) { this._pauseText.destroy(); this._pauseText = null; }
-            if (this._pauseOverlay) { this._pauseOverlay.destroy(); this._pauseOverlay = null; }
-            this.obstacleTimer.paused = false;
-            this.scoreTick.paused = false;
-        } else {
-            this._paused = true;
-            this.obstacleTimer.paused = true;
-            this.scoreTick.paused = true;
-            
-            const { width, height } = this.scale;
-            this._pauseOverlay = this.add.graphics().setDepth(100);
-            this._pauseOverlay.fillStyle(0x000000, 0.75);
-            this._pauseOverlay.fillRect(0, 0, width, height);
-
-            this._pauseText = this.add.text(width / 2, height / 2, '⏸ JEDA\n\nTekan P atau Klik Layar untuk Melanjutkan', {
-                fontFamily: "Courier New, monospace, sans-serif",
-                fontSize: '24px',
-                fontStyle: 'bold',
-                color: '#00ffcc',
-                align: 'center'
-            }).setOrigin(0.5).setDepth(101);
-
-            // Small delay to prevent catching the click that triggered pause
-            this.time.delayedCall(150, () => {
-                if (this._paused) {
-                    this.input.once('pointerdown', this._resumeFromClick, this);
-                }
-            });
-        }
-    }
+             // Pause rotor sound
+             if (this.rotorSound && this.rotorSound.isPlaying) {
+                 this.rotorSound.pause();
+             }
+             
+             const { width, height } = this.scale;
+             this._pauseOverlay = this.add.graphics().setDepth(100);
+             this._pauseOverlay.fillStyle(0x000000, 0.75);
+             this._pauseOverlay.fillRect(0, 0, width, height);
+ 
+             this._pauseText = this.add.text(width / 2, height / 2, '⏸ JEDA\n\nTekan P atau Klik Layar untuk Melanjutkan', {
+                 fontFamily: "Courier New, monospace, sans-serif",
+                 fontSize: '24px',
+                 fontStyle: 'bold',
+                 color: '#00ffcc',
+                 align: 'center'
+             }).setOrigin(0.5).setDepth(101);
+ 
+             // Small delay to prevent catching the click that triggered pause
+             this.time.delayedCall(150, () => {
+                 if (this._paused) {
+                     this.input.once('pointerdown', this._resumeFromClick, this);
+                 }
+             });
+         }
+     }
 
     _resumeFromClick() {
         if (this._paused) {

@@ -217,6 +217,13 @@ export class QuestionScene extends Phaser.Scene {
         const isCorrect = selectedIndex === this.correctIndex;
         const bonusTime = this.timeLeft > this.questionTime - 5; // answered in <5s
 
+        // Play answer sound effect
+        if (isCorrect) {
+            this.sound.play('benar', { volume: 0.6 });
+        } else {
+            this.sound.play('salah', { volume: 0.6 });
+        }
+
         // Highlight correct/wrong
         this.answerButtons.forEach((btn, i) => {
             btn.hitArea.disableInteractive();
