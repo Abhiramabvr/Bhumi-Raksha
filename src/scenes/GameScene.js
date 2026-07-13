@@ -33,6 +33,7 @@ export class GameScene extends Phaser.Scene {
         this._paused = false;
         this.bulletsLeft = 5;
         this.gasProjectiles = [];
+        this._lastSpeedIncrease = 0;
 
         // Speed settings per difficulty
         const speedMap = { easy: 220, medium: 300, hard: 400 };
