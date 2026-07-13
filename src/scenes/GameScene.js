@@ -19,8 +19,16 @@ export class GameScene extends Phaser.Scene {
     async create() {
         const { width, height } = this.scale;
 
+        // Start background music if not playing (e.g., after Retry)
+        const bgm = this.sound.get('bgm');
+        if (!bgm) {
+            this.sound.play('bgm', { loop: true, volume: 0.65 });
+        } else if (!bgm.isPlaying) {
+            bgm.play({ loop: true, volume: 0.65 });
+        }
+
         // Start rotor flight sound
-        this.rotorSound = this.sound.add('baling_baling', { loop: true, volume: 0.35 });
+        this.rotorSound = this.sound.add('baling_baling', { loop: true, volume: 0.10 });
         this.rotorSound.play();
 
         // ============ GAME STATE ============
@@ -207,33 +215,106 @@ export class GameScene extends Phaser.Scene {
     }
 
     _setupTouchControls(width, height) {
-        // Top half = go up, bottom half = go down
-        const upZone = this.add.rectangle(0, 52, width, (height - 52) / 2, 0x000000, 0)
-            .setOrigin(0, 0).setInteractive({ useHandCursor: false }).setDepth(8);
-        const downZone = this.add.rectangle(0, 52 + (height - 52) / 2, width, (height - 52) / 2, 0x000000, 0)
-            .setOrigin(0, 0).setInteractive({ useHandCursor: false }).setDepth(8);
+        const isMobile = this.sys.game.device.os.android || this.sys.game.device.os.iOS;
 
-        upZone.on('pointerdown', () => { this.touchUp = true; });
-        upZone.on('pointerup', () => { this.touchUp = false; });
-        upZone.on('pointerout', () => { this.touchUp = false; });
-        downZone.on('pointerdown', () => { this.touchDown = true; });
-        downZone.on('pointerup', () => { this.touchDown = false; });
-        downZone.on('pointerout', () => { this.touchDown = false; });
+        if (isMobile) {
+            // Draw clean virtual buttons for Up, Down and Shoot
+            // Up Button: bottom-left area
+            this._createVirtualButton(85, height - 165, 35, '▲', 0x00ffcc, 
+                () => { this.touchUp = true; }, 
+                () => { this.touchUp = false; }
+            );
 
-        // Touch indicator arrows
-        this.add.text(30, 70, '▲\nNAIK', {
-            fontFamily: "'Segoe UI', Arial, sans-serif",
-            fontSize: '14px',
-            color: 'rgba(255,255,255,0.3)',
-            align: 'center'
-        }).setDepth(9);
+            // Down Button: bottom-left area, below Up
+            this._createVirtualButton(85, height - 75, 35, '▼', 0x00ffcc, 
+                () => { this.touchDown = true; }, 
+                () => { this.touchDown = false; }
+            );
 
-        this.add.text(30, this.scale.height - 80, '▼\nTURUN', {
-            fontFamily: "'Segoe UI', Arial, sans-serif",
-            fontSize: '14px',
-            color: 'rgba(255,255,255,0.3)',
-            align: 'center'
-        }).setDepth(9);
+            // Shoot Button: bottom-right area
+            this._createVirtualButton(width - 95, height - 95, 45, 'TEMBAK', 0xef4444, 
+                () => {
+                    if (this.isGameOver || this._paused || this.questionActive) return;
+                    if (this.bulletsLeft > 0) {
+                        this.bulletsLeft--;
+                        this._shootBullet();
+                        this._updateAmmoHUD();
+                    }
+                }, 
+                null
+            );
+        } else {
+            // Top half = go up, bottom half = go down
+            const upZone = this.add.rectangle(0, 52, width, (height - 52) / 2, 0x000000, 0)
+                .setOrigin(0, 0).setInteractive({ useHandCursor: false }).setDepth(8);
+            const downZone = this.add.rectangle(0, 52 + (height - 52) / 2, width, (height - 52) / 2, 0x000000, 0)
+                .setOrigin(0, 0).setInteractive({ useHandCursor: false }).setDepth(8);
+
+            upZone.on('pointerdown', () => { this.touchUp = true; });
+            upZone.on('pointerup', () => { this.touchUp = false; });
+            upZone.on('pointerout', () => { this.touchUp = false; });
+            downZone.on('pointerdown', () => { this.touchDown = true; });
+            downZone.on('pointerup', () => { this.touchDown = false; });
+            downZone.on('pointerout', () => { this.touchDown = false; });
+
+            // Touch indicator arrows
+            this.add.text(30, 70, '▲\nNAIK', {
+                fontFamily: "'Segoe UI', Arial, sans-serif",
+                fontSize: '14px',
+                color: 'rgba(255,255,255,0.3)',
+                align: 'center'
+            }).setDepth(9);
+
+            this.add.text(30, this.scale.height - 80, '▼\nTURUN', {
+                fontFamily: "'Segoe UI', Arial, sans-serif",
+                fontSize: '14px',
+                color: 'rgba(255,255,255,0.3)',
+                align: 'center'
+            }).setDepth(9);
+        }
+    }
+
+    _createVirtualButton(x, y, radius, label, color, onPress, onRelease) {
+        const btn = this.add.graphics().setDepth(22);
+        btn.fillStyle(color, 0.4);
+        btn.lineStyle(2, color, 0.8);
+        btn.fillCircle(x, y, radius);
+        btn.strokeCircle(x, y, radius);
+
+        const fontSize = label.length > 2 ? '14px' : '24px';
+        const txt = this.add.text(x, y, label, {
+            fontFamily: "Segoe UI, Arial, sans-serif",
+            fontSize: fontSize,
+            fontStyle: 'bold',
+            color: '#ffffff'
+        }).setOrigin(0.5).setDepth(23);
+
+        const hitArea = this.add.circle(x, y, radius, 0x000000, 0)
+            .setInteractive({ useHandCursor: true })
+            .setDepth(24);
+
+        hitArea.on('pointerdown', () => {
+            btn.clear();
+            btn.fillStyle(color, 0.75);
+            btn.lineStyle(3, 0xffffff, 0.95);
+            btn.fillCircle(x, y, radius);
+            btn.strokeCircle(x, y, radius);
+            if (onPress) onPress();
+        });
+
+        const releaseHandler = () => {
+            btn.clear();
+            btn.fillStyle(color, 0.4);
+            btn.lineStyle(2, color, 0.8);
+            btn.fillCircle(x, y, radius);
+            btn.strokeCircle(x, y, radius);
+            if (onRelease) onRelease();
+        };
+
+        hitArea.on('pointerup', releaseHandler);
+        hitArea.on('pointerout', releaseHandler);
+        
+        return { btn, txt, hitArea };
     }
 
     _spawnObstacle() {
@@ -354,7 +435,7 @@ export class GameScene extends Phaser.Scene {
     _shootBullet() {
         const { width } = this.scale;
         // Play laser shot sound
-        this.sound.play('laser', { volume: 0.35 });
+        this.sound.play('laser', { volume: 0.65 });
 
         // Draw bullet as graphics
         const bullet = this.add.graphics().setDepth(6);
