@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Buku Panduan Teknis - Bhumi Raksha: Skies of Tomorrow</title>
+    <style>
+        /* CSS Reset & A4 PDF Optimization */
+        @page {
+            size: A4;
+            margin: 25mm 20mm;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: #1e293b;
+            line-height: 1.6;
+            font-size: 10pt;
+            background-color: #ffffff;
+        }
+        
+        /* Layout Helpers */
+        .page {
+            page-break-after: always;
+            position: relative;
+        }
+        .page:last-child {
+            page-break-after: avoid;
+        }
+        
+        /* Cover Page Styling */
+        .cover {
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-sizing: border-box;
+            border: 4px double #10b981;
+            padding: 60px 40px;
+            background-color: #fcfdfd;
+            border-radius: 8px;
+        }
+        .cover-header {
+            text-align: center;
+        }
+        .cover-logo {
+            font-size: 12pt;
+            font-weight: bold;
+            color: #059669;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        .cover-title {
+            font-size: 30pt;
+            font-weight: 800;
+            color: #064e3b;
+            line-height: 1.15;
+            margin: 40px 0 10px 0;
+            letter-spacing: -0.5px;
+        }
+        .cover-subtitle {
+            font-size: 16pt;
+            font-weight: 500;
+            color: #10b981;
+            margin-bottom: 50px;
+            letter-spacing: 1px;
+        }
+        .cover-mid {
+            text-align: center;
+            margin: 40px 0;
+        }
+        .badge-sdg {
+            display: inline-block;
+            border: 2px solid #047857;
+            padding: 8px 16px;
+            font-size: 11pt;
+            color: #047857;
+            font-weight: 700;
+            background-color: #ecfdf5;
+            border-radius: 4px;
+            letter-spacing: 1px;
+        }
+        .cover-meta {
+            font-size: 10.5pt;
+            color: #475569;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 30px;
+        }
+        .meta-team {
+            margin-top: 15px;
+            margin-bottom: 25px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        .team-member {
+            background-color: #f8fafc;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        .team-name {
+            font-weight: 600;
+            color: #0f172a;
+        }
+        .team-id {
+            font-family: 'Consolas', monospace;
+            font-size: 9pt;
+            color: #64748b;
+        }
+        .cover-footer {
+            text-align: center;
+            font-size: 9.5pt;
+            color: #64748b;
+            font-weight: 500;
+        }
+        
+        /* Headings */
+        h1 {
+            font-size: 18pt;
+            color: #064e3b;
+            border-bottom: 2px solid #10b981;
+            padding-bottom: 6px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            page-break-after: avoid;
+        }
+        h2 {
+            font-size: 13pt;
+            color: #0f766e;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 4px;
+            page-break-after: avoid;
+        }
+        h3 {
+            font-size: 11pt;
+            color: #047857;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            page-break-after: avoid;
+        }
+        
+        p {
+            margin-top: 0;
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+        
+        /* Table of Contents */
+        .toc-list {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 30px;
+        }
+        .toc-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            border-bottom: 1px dotted #cbd5e1;
+        }
+        .toc-name {
+            background-color: #ffffff;
+            padding-right: 10px;
+            font-weight: 500;
+        }
+        .toc-page {
+            background-color: #ffffff;
+            padding-left: 10px;
+            font-weight: 600;
+            color: #047857;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 9pt;
+        }
+        th, td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #ecfdf5;
+            color: #064e3b;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        
+        /* Code blocks */
+        code {
+            font-family: 'Consolas', 'Courier New', monospace;
+            background-color: #f1f5f9;
+            color: #0f766e;
+            padding: 1.5px 4px;
+            border-radius: 4px;
+            font-size: 8.5pt;
+        }
+        pre {
+            background-color: #0f172a;
+            color: #f8fafc;
+            padding: 12px 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 8pt;
+            line-height: 1.45;
+            border-left: 4px solid #10b981;
+            margin: 15px 0;
+            page-break-inside: avoid;
+        }
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+        
+        /* Syntax Highlighting */
+        .kw { color: #f43f5e; font-weight: bold; } /* keyword */
+        .fn { color: #38bdf8; } /* function */
+        .str { color: #a3e635; } /* string */
+        .cmt { color: #64748b; font-style: italic; } /* comment */
+        .num { color: #fb923c; } /* number */
+        .cls { color: #fcd34d; } /* class */
+        
+        /* Alert Boxes */
+        .info-box {
+            background-color: #ecfdf5;
+            border-left: 4px solid #10b981;
+            padding: 12px 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 9pt;
+            page-break-inside: avoid;
+        }
+        .info-title {
+            font-weight: 600;
+            color: #064e3b;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-size: 8.5pt;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= PAGE 1: COVER ================= -->
+    <div class="page">
+        <div class="cover">
+            <div class="cover-header">
+                <div class="cover-logo">Multimedia Interactive Project</div>
+                <div class="cover-title">BHUMI RAKSHA</div>
+                <div class="cover-subtitle">Skies of Tomorrow</div>
+            </div>
+            
+            <div class="cover-mid">
+                <div class="badge-sdg">SDG GOAL 13: CLIMATE ACTION</div>
+                <p style="margin-top: 20px; font-style: italic; color: #475569; text-align: center;">
+                    Buku Panduan Teknis, Arsitektur Kode, Mekanik Permainan, dan Logika Program
+                </p>
+            </div>
+            
+            <div class="cover-meta">
+                <div>Disusun Oleh: <strong>PROJECT GREEN ASCENT</strong></div>
+                <div class="meta-team">
+                    <div class="team-member">
+                        <div class="team-name">Abhirama Balaphradana V. R.</div>
+                        <div class="team-id">NIM: 2338018077</div>
+                    </div>
+                    <div class="team-member">
+                        <div class="team-name">M Rizqi Akbar Hidayat</div>
+                        <div class="team-id">NIM: 2300018409</div>
+                    </div>
+                    <div class="team-member">
+                        <div class="team-name">Afif Hadriansyah</div>
+                        <div class="team-id">NIM: 2300018400</div>
+                    </div>
+                </div>
+                <div class="cover-footer">
+                    PROGRAM STUDI S1 INFORMATIKA<br>
+                    FAKULTAS TEKNOLOGI INDUSTRI · UNIVERSITAS AHMAD DAHLAN<br>
+                    YOGYAKARTA, 2026
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= PAGE 2: TABLE OF CONTENTS & INTRODUCTION ================= -->
+    <div class="page">
+        <h1>Daftar Isi</h1>
+        <ul class="toc-list">
+            <li class="toc-item"><span class="toc-name">1. Pendahuluan & Konsep Utama Game</span><span class="toc-page">3</span></li>
+            <li class="toc-item"><span class="toc-name">2. Struktur Berkas & Scene Navigation</span><span class="toc-page">4</span></li>
+            <li class="toc-item"><span class="toc-name">3. Analisis Mekanik Core Game</span><span class="toc-page">5</span></li>
+            <li class="toc-item"><span class="toc-name">   3.1 Lokasi Munculnya Musuh (Enemy Spawning)</span><span class="toc-page">5</span></li>
+            <li class="toc-item"><span class="toc-name">   3.2 Mekanik Awan Besar (Special Obstacles)</span><span class="toc-page">5</span></li>
+            <li class="toc-item"><span class="toc-name">   3.3 Pengaturan Spawn Rate</span><span class="toc-page">6</span></li>
+            <li class="toc-item"><span class="toc-name">   3.4 Sistem Pengaturan Kecepatan (Speed Scaling)</span><span class="toc-page">6</span></li>
+            <li class="toc-item"><span class="toc-name">   3.5 Mekanik Tembakan & Amunisi Laser</span><span class="toc-page">7</span></li>
+            <li class="toc-item"><span class="toc-name">   3.6 Mekanik Kemunculan Soal (Question Triggering)</span><span class="toc-page">7</span></li>
+            <li class="toc-item"><span class="toc-name">   3.7 Penalti Jawaban Salah & Tabrakan</span><span class="toc-page">8</span></li>
+            <li class="toc-item"><span class="toc-name">   3.8 Sistem Nyawa & Damage Loop</span><span class="toc-page">8</span></li>
+            <li class="toc-item"><span class="toc-name">   3.9 Konfigurasi Tingkat Kesulitan</span><span class="toc-page">9</span></li>
+            <li class="toc-item"><span class="toc-name">4. Logika Game (Game Loop) & Detail Kecil</span><span class="toc-page">10</span></li>
+            <li class="toc-item"><span class="toc-name">   4.1 Scrolling Background & Parallax</span><span class="toc-page">10</span></li>
+            <li class="toc-item"><span class="toc-name">   4.2 Hovering Physics & Kontrol Pesawat</span><span class="toc-page">10</span></li>
+            <li class="toc-item"><span class="toc-name">   4.3 Efek Ledakan Partikel Vektor</span><span class="toc-page">11</span></li>
+            <li class="toc-item"><span class="toc-name">   4.4 Sistem Pause Jeda Game</span><span class="toc-page">11</span></li>
+            <li class="toc-item"><span class="toc-name">5. Kesimpulan & Ringkasan Teknis</span><span class="toc-page">12</span></li>
+        </ul>
+        
+        <h1 style="margin-top: 40px;">1. Pendahuluan & Konsep Utama Game</h1>
+        <p>
+            <strong>Bhumi Raksha: Skies of Tomorrow</strong> adalah sebuah permainan edukatif multimedia interaktif berbasis web 2D. Proyek ini dikembangkan menggunakan pustaka game HTML5 terkemuka, <strong>Phaser.js v3</strong>, yang berjalan secara native di web browser modern tanpa memerlukan instalasi tambahan.
+        </p>
+        <p>
+            Tema utama yang diangkat dalam game ini adalah <strong>SDG Goal 13: Climate Action (Penanganan Perubahan Iklim)</strong>. Game ini bertujuan memberikan pemahaman praktis dan edukasi interaktif kepada para pemain—khususnya mahasiswa baru pada kegiatan Program Pengenalan Kampus (P2K)—mengenai pemanasan global, efek rumah kaca, energi terbarukan, polusi udara, serta aksi nyata pelestarian lingkungan hidup.
+        </p>
+        <div class="info-box">
+            <div class="info-title">Core Gameplay Loop (Alur Utama Permainan)</div>
+            Pemain mengendalikan sebuah pesawat ramah lingkungan yang terbang melintasi langit. Terdapat dua jenis rintangan: rintangan biasa (cerobong asap pabrik pencemar) yang menembakkan gas berbahaya, dan rintangan khusus (awan polusi besar). Saat awan besar mendekat, radar pesawat mengaktifkan modul soal edukatif. Menjawab dengan benar akan mengisi ulang amunisi dan menembakkan laser penghancur. Menjawab salah atau tertabrak rintangan akan merusak pelindung pesawat (mengurangi nyawa).
+        </div>
+    </div>
+
+    <!-- ================= PAGE 3: PROJECT STRUCTURE & SCENE ARCHITECTURE ================= -->
+    <div class="page">
+        <h1>2. Struktur Berkas & Scene Navigation</h1>
+        <p>
+            Proyek game ini dirancang dengan arsitektur bersih menggunakan pemisahan modular berbasis kelas ES6 JavaScript. Struktur berkas utamanya adalah sebagai berikut:
+        </p>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 30%;">Path Berkas</th>
+                    <th style="width: 25%;">Komponen Utama</th>
+                    <th>Deskripsi Singkat Fungsi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>index.html</code></td>
+                    <td>Entry Point Web</td>
+                    <td>Tempat inisialisasi awal, pemuatan library Phaser.js, dan kontainer CSS wrapper UI.</td>
+                </tr>
+                <tr>
+                    <td><code>src/main.js</code></td>
+                    <td>Inisialisasi Game</td>
+                    <td>Konfigurasi global mesin Phaser (dimensi layar 960x640, mode skala FIT, pendaftaran scene).</td>
+                </tr>
+                <tr>
+                    <td><code>src/scenes/MenuScene.js</code></td>
+                    <td>Scene Menu Utama</td>
+                    <td>Menyediakan HUD futuristik, tutorial permainan, musik latar (BGM), dan tombol pilihan tingkat kesulitan.</td>
+                </tr>
+                <tr>
+                    <td><code>src/scenes/GameScene.js</code></td>
+                    <td>Scene Gameplay Inti</td>
+                    <td>Mengatur loop pembaruan game, pesawat pemain, spawning musuh, proyektil, tabrakan, dan HUD.</td>
+                </tr>
+                <tr>
+                    <td><code>src/scenes/QuestionScene.js</code></td>
+                    <td>Scene Overlay Soal</td>
+                    <td>Popup modal pertanyaan yang menutupi area permainan saat modul soal edukasi aktif.</td>
+                </tr>
+                <tr>
+                    <td><code>src/scenes/ScoreScene.js</code></td>
+                    <td>Scene Skor Akhir</td>
+                    <td>Layar evaluasi hasil permainan, menampilkan skor, persentase akurasi, dan medali gelar pemain.</td>
+                </tr>
+                <tr>
+                    <td><code>src/utils/QuestionManager.js</code></td>
+                    <td>Manajer Bank Soal</td>
+                    <td>Mengakses berkas <code>questions.json</code>, mengacak soal, dan melakukan pencampuran pilihan jawaban.</td>
+                </tr>
+                <tr>
+                    <td><code>data/questions.json</code></td>
+                    <td>Database Soal JSON</td>
+                    <td>Kumpulan 40 soal mitigasi lingkungan yang terbagi dalam 5 kategori edukasi iklim.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Diagram Navigasi Scene (State Transition)</h3>
+        <p>
+            Mesin Phaser mengelola pergantian status antar-scene secara efisien untuk menghindari kebocoran memori. Transisi scene diatur dengan skema berikut:
+        </p>
+        <pre>
+[ index.html ] -> Memulai main.js
+      |
+      v
+[ MenuScene ]  ---(Pilih Level: Mudah/Sedang/Sulit)---> [ GameScene ]
+                                                             |
+                                      (Awan Mendekat)        |  (Nyawa Habis)
+                                      Launch (Overlay)       |  Transition Out
+                                            |                v
+                                            v         [ ScoreScene ]
+                                     [ QuestionScene ]       |
+                                            |                | (Main Lagi / Retry)
+                                     (Selesai Jawab)         v
+                                     Resume & Stop  --> [ GameScene ]
+        </pre>
+        
+        <div class="info-box">
+            <div class="info-title">Pentingnya Mode Overlay</div>
+            <code>QuestionScene</code> tidak mematikan <code>GameScene</code>. Ia diluncurkan menggunakan perintah <code>this.scene.launch()</code>, yang memungkinkannya berjalan sebagai lapisan overlay transparan di atas gameplay yang sedang berjalan tanpa menghapus cache keadaan permainan.
+        </div>
+    </div>
+
+    <!-- ================= PAGE 4: DETAILED CODE ANALYSIS 1 - SPAWN & SPECIAL OBSTACLES ================= -->
+    <div class="page">
+        <h1>3. Analisis Mekanik Core Game</h1>
+        
+        <h2>3.1 Lokasi Munculnya Musuh (Enemy Spawning)</h2>
+        <p>
+            Rintangan (musuh) muncul secara dinamis dari sisi kanan layar, tepatnya di luar batas pandang pemain (offset X = <code>width + 100</code>). Hal ini memberikan ilusi kepada pemain bahwa rintangan datang dari arah depan saat pesawat terbang maju. Titik koordinat vertikal (Y) diacak untuk memastikan rintangan tersebar rata di sepanjang jalur terbang.
+        </p>
+        <p>
+            Fungsi spawning diimplementasikan di dalam <code>src/scenes/GameScene.js</code> pada metode <code>_spawnObstacle()</code>:
+        </p>
+        <pre>
+<span class="cmt">// GameScene.js - Garis 320: Implementasi Spawning Rintangan</span>
+<span class="fn">_spawnObstacle</span>() {
+    <span class="kw">if</span> (<span class="kw">this</span>.isGameOver || <span class="kw">this</span>.questionActive || <span class="kw">this</span>._paused) <span class="kw">return</span>;
+    <span class="kw">const</span> { width, height } = <span class="kw">this</span>.scale;
+
+    <span class="cmt">// Menentukan tipe rintangan (40% Khusus, 60% Biasa)</span>
+    <span class="kw">const</span> isSpecial = Math.<span class="fn">random</span>() &lt; <span class="num">0.4</span>;
+    <span class="kw">const</span> texture = isSpecial ? <span class="str">'obstacle_cloud'</span> : <span class="str">'obstacle_factory'</span>;
+    <span class="cmt">// Posisi Y diacak di antara batas terbang aman (80px s/d height - 80px)</span>
+    <span class="kw">const</span> spawnY = Phaser.Math.<span class="fn">Between</span>(<span class="num">80</span>, height - <span class="num">80</span>);
+    <span class="kw">const</span> scale = Phaser.Math.<span class="fn">FloatBetween</span>(<span class="num">0.12</span>, <span class="num">0.2</span>);
+
+    <span class="kw">const</span> obs = <span class="kw">this</span>.add.<span class="fn">image</span>(width + <span class="num">100</span>, spawnY, texture)
+        .<span class="fn">setScale</span>(scale)
+        .<span class="fn">setDepth</span>(<span class="num">4</span>)
+        .<span class="fn">setTint</span>(isSpecial ? <span class="num">0xff8844</span> : <span class="num">0xffffff</span>);
+        
+    <span class="cmt">// Menyimpan data rintangan ke array pelacak aktif</span>
+    <span class="kw">const</span> obsData = {
+        img: obs,
+        isSpecial,
+        triggered: <span class="kw">false</span>,
+        speed: <span class="kw">this</span>.gameSpeed * Phaser.Math.<span class="fn">FloatBetween</span>(<span class="num">0.8</span>, <span class="num">1.2</span>),
+        halfW: obs.displayWidth / <span class="num">2</span>,
+        halfH: obs.displayHeight / <span class="num">2</span>
+    };
+    <span class="cmt">// ...</span>
+}</pre>
+
+        <h2>3.2 Mekanik Awan Besar (Special Obstacles)</h2>
+        <p>
+            <strong>Awan Besar (Awan Polusi)</strong> diidentifikasi dengan tekstur <code>obstacle_cloud</code>. Awan ini merupakan rintangan khusus yang tidak dapat dilewati secara normal begitu saja karena mengaktifkan modul soal. Secara visual, awan diberi warna jingga kecoklatan (tint <code>0xff8844</code>) yang melambangkan gas berbahaya, efek animasi berdenyut (pulsing tween), serta indikator teks tanda tanya (<code>❓</code>) di atasnya untuk membedakannya dengan pabrik biasa.
+        </p>
+        <pre>
+<span class="cmt">// GameScene.js - Garis 345: Animasi khusus dan indikator Awan Besar</span>
+<span class="kw">if</span> (isSpecial) {
+    <span class="cmt">// Efek berdenyut (pulsing alpha) agar awan terlihat dinamis dan berbahaya</span>
+    <span class="kw">this</span>.tweens.<span class="fn">add</span>({
+        targets: obs,
+        alpha: <span class="num">0.7</span>,
+        yoyo: <span class="kw">true</span>,
+        repeat: -<span class="num">1</span>,
+        duration: <span class="num">500</span>
+    });
+
+    <span class="cmt">// Tanda tanya melayang di atas awan</span>
+    <span class="kw">const</span> qMark = <span class="kw">this</span>.add.<span class="fn">text</span>(obs.x, obs.y - obs.displayHeight / <span class="num">2</span> - <span class="num">15</span>, <span class="str">'❓'</span>, {
+        fontSize: <span class="str">'18px'</span>
+    }).<span class="fn">setDepth</span>(<span class="num">6</span>);
+    obsData.qMark = qMark;
+}</pre>
+    </div>
+
+    <!-- ================= PAGE 5: DETAILED CODE ANALYSIS 2 - SPAWN RATE & SPEED SYSTEM ================= -->
+    <div class="page">
+        <h1>3.3 Pengaturan Spawn Rate</h1>
+        <p>
+            Spawn rate rintangan dikontrol menggunakan sistem timer event dari Phaser (<code>Phaser.Time.Clock</code>). Durasi jeda pemanggilan fungsi <code>_spawnObstacle()</code> ditentukan berdasarkan parameter tingkat kesulitan yang dipilih oleh pemain pada awal permainan.
+        </p>
+        <pre>
+<span class="cmt">// GameScene.js - Garis 80: Konfigurasi jeda spawn berdasarkan kesulitan</span>
+<span class="kw">const</span> spawnDelayMap = { easy: <span class="num">3000</span>, medium: <span class="num">2200</span>, hard: <span class="num">1500</span> };
+
+<span class="kw">this</span>.obstacleTimer = <span class="kw">this</span>.time.<span class="fn">addEvent</span>({
+    delay: spawnDelayMap[<span class="kw">this</span>.difficulty] || <span class="num">2200</span>, <span class="cmt">// jeda milidetik</span>
+    callback: <span class="kw">this</span>._spawnObstacle,
+    callbackScope: <span class="kw">this</span>,
+    repeat: -<span class="num">1</span> <span class="cmt">// Berulang selamanya</span>
+});</pre>
+        <p>
+            Pada tingkat kesulitan <strong>Easy</strong>, rintangan muncul setiap 3,0 detik, memberikan ruang gerak luas bagi pemain. Pada tingkat <strong>Medium</strong>, jeda dikurangi menjadi 2,2 detik. Sedangkan pada tingkat <strong>Hard</strong> rintangan muncul bertubi-tubi setiap 1,5 detik, memaksa pemain untuk bertindak cepat.
+        </p>
+
+        <h2>3.4 Sistem Pengaturan Kecepatan (Speed Scaling)</h2>
+        <p>
+            Sistem kecepatan game (<code>this.gameSpeed</code>) memiliki beberapa lapisan logika dinamis yang bertujuan meningkatkan tingkat ketegangan permainan dan kenyamanan menjawab soal:
+        </p>
+        <ol>
+            <li>
+                <strong>Kecepatan Awal (Base Speed):</strong> Kecepatan awal pesawat dan latar belakang ditentukan oleh tingkat kesulitan game. Easy memiliki kecepatan dasar 220 px/dtk, Medium 300 px/dtk, dan Hard sebesar 400 px/dtk.
+            </li>
+            <li>
+                <strong>Peningkatan Bertahap (Progressive Acceleration):</strong> Kecepatan game ditingkatkan sebesar +20 px/dtk setiap 30 detik permainan berlangsung untuk menciptakan tantangan progresif. Nilai ini dibatasi maksimal 700 px/dtk agar game tetap dapat dimainkan secara manusiawi (Garis 748-751).
+                <pre>
+<span class="cmt">// Setiap 30.000 ms (30 detik), naikkan kecepatan game</span>
+<span class="kw">if</span> (Math.<span class="fn">floor</span>(time / <span class="num">30000</span>) &gt; <span class="kw">this</span>._lastSpeedIncrease) {
+    <span class="kw">this</span>._lastSpeedIncrease = Math.<span class="fn">floor</span>(time / <span class="num">30000</span>);
+    <span class="kw">this</span>.gameSpeed = Math.<span class="fn">min</span>(<span class="kw">this</span>.gameSpeed + <span class="num">20</span>, <span class="num">700</span>);
+}</pre>
+            </li>
+            <li>
+                <strong>Variasi Kecepatan Individual:</strong> Setiap musuh yang muncul diacak kecepatannya berkisar antara 80% hingga 120% dari kecepatan game saat itu (<code>this.gameSpeed * FloatBetween(0.8, 1.2)</code>) agar tidak berbaris kaku.
+            </li>
+            <li>
+                <strong>Sinematik Slow-Motion Saat Kuis:</strong> Ketika ada soal aktif di layar (<code>this.questionActive == true</code>), kecepatan rintangan yang bergerak diperlambat menjadi 15% dari kecepatan aslinya. Hal ini mencegah rintangan menabrak pemain saat pemain sedang fokus membaca dan memilih jawaban soal (Garis 667-668).
+                <pre>
+<span class="cmt">// Memperlambat objek di layar saat QuestionScene aktif</span>
+<span class="kw">const</span> obsSpeed = <span class="kw">this</span>.questionActive ? <span class="kw">this</span>.gameSpeed * <span class="num">0.15</span> : o.speed;
+o.img.x -= obsSpeed * dt;</pre>
+            </li>
+        </ol>
+    </div>
+
+    <!-- ================= PAGE 6: DETAILED CODE ANALYSIS 3 - SHOOTING & QUESTION TRIGGER ================= -->
+    <div class="page">
+        <h1>3.5 Mekanik Tembakan & Amunisi Laser</h1>
+        <p>
+            Pesawat dilengkapi dengan meriam laser hijau ramah lingkungan (efek <code>0x86efac</code>) untuk menembak cerobong asap pabrik. Laser digambar secara manual di runtime menggunakan fungsi grafis (graphics rendering) Phaser, sehingga menghemat konsumsi memori pemuatan sprite eksternal.
+        </p>
+        <p>
+            Amunisi dibatasi sebanyak maksimal 5 tembakan (ditampilkan sebagai status <code>⚡ LASER: 5/5</code> di HUD). Pemain dapat menembak secara manual menggunakan tombol <code>SPACE</code> di keyboard komputer atau tombol merah virtual <code>TEMBAK</code> pada perangkat layar sentuh/mobile.
+        </p>
+        <pre>
+<span class="cmt">// GameScene.js - Garis 435: Pembuatan Proyektil Laser secara dinamis</span>
+<span class="fn">_shootBullet</span>() {
+    <span class="kw">this</span>.sound.<span class="fn">play</span>(<span class="str">'laser'</span>, { volume: <span class="num">0.65</span> });
+
+    <span class="cmt">// Menggambar lingkaran inti peluru laser</span>
+    <span class="kw">const</span> bullet = <span class="kw">this</span>.add.<span class="fn">graphics</span>().<span class="fn">setDepth</span>(<span class="num">6</span>);
+    bullet.<span class="fn">fillStyle</span>(<span class="num">0x86efac</span>, <span class="num">1</span>);
+    bullet.<span class="fn">fillCircle</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">7</span>);
+    bullet.x = <span class="kw">this</span>.player.x + <span class="kw">this</span>.player.displayWidth / <span class="num">2</span>;
+    bullet.y = <span class="kw">this</span>.player.y;
+
+    <span class="cmt">// Menggambar lingkaran cahaya aura (glow effect) di belakang peluru</span>
+    <span class="kw">const</span> glow = <span class="kw">this</span>.add.<span class="fn">graphics</span>().<span class="fn">setDepth</span>(<span class="num">5</span>);
+    glow.<span class="fn">fillStyle</span>(<span class="num">0x4ade80</span>, <span class="num">0.3</span>);
+    glow.<span class="fn">fillCircle</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">14</span>);
+    glow.x = bullet.x;
+    glow.y = bullet.y;
+
+    <span class="kw">this</span>.bullets.<span class="fn">push</span>({ gfx: bullet, glow, vy: <span class="num">0</span>, active: <span class="kw">true</span> });
+    <span class="cmt">// Efek memudar untuk glow proyektil</span>
+    <span class="kw">this</span>.tweens.<span class="fn">add</span>({ targets: glow, alpha: <span class="num">0</span>, duration: <span class="num">600</span>, onComplete: () =&gt; glow.<span class="fn">destroy</span>() });
+}</pre>
+        <p>
+            Ketika amunisi habis (0/5), indikator teks laser di HUD akan berubah warna menjadi merah. Pengisian ulang (reload) amunisi hanya dapat dilakukan secara instan apabila pemain berhasil menjawab modul soal kuis dengan benar di layar.
+        </p>
+
+        <h2>3.6 Mekanik Kemunculan Soal (Question Triggering)</h2>
+        <p>
+            Awan besar (special obstacle) yang bergerak dari kanan tidak langsung memicu soal ketika pertama kali muncul di layar. Modul soal baru akan diaktifkan secara dinamis saat awan besar melewati sensor radar pesawat, yakni ketika koordinat X awan menyentuh batas 65% lebar layar (sekitar area <code>x &lt; width * 0.65</code>).
+        </p>
+        <pre>
+<span class="cmt">// GameScene.js - Garis 715: Sensor pemicu modul kuis</span>
+<span class="kw">if</span> (o.isSpecial && !o.triggered && o.img.x &lt; <span class="kw">this</span>.scale.width * <span class="num">0.65</span>) {
+    <span class="kw">this</span>.<span class="fn">_triggerQuestion</span>(o);
+}</pre>
+        <p>
+            Metode <code>_triggerQuestion()</code> akan memanggil <code>QuestionManager</code> untuk mengambil satu soal acak dari berkas JSON, mengacak posisi opsi jawaban agar tidak mudah dihafalkan, lalu meluncurkan <code>QuestionScene</code> sebagai scene overlay dengan mengirimkan data-data tersebut.
+        </p>
+    </div>
+
+    <!-- ================= PAGE 7: DETAILED CODE ANALYSIS 4 - PENALTY & LIVES SYSTEM ================= -->
+    <div class="page">
+        <h1>3.7 Penalti Jawaban Salah & Tabrakan</h1>
+        <p>
+            Game ini memberikan konsekuensi taktis apabila pemain tidak berhasil menjawab soal dengan benar atau kehabisan waktu pengerjaan:
+        </p>
+        <ol>
+            <li>
+                <strong>Penalti Jawaban Salah / Waktu Habis:</strong> Awan polusi besar tidak hancur, amunisi laser tidak diisi ulang, dan <code>QuestionScene</code> ditutup dengan lambat. Pemain kembali ke mode terbang manual dan dipaksa melakukan manuver menghindar (evasive action) agar awan polusi tersebut tidak menabrak pesawat (Garis 471).
+            </li>
+            <li>
+                <strong>Tabrakan dengan Rintangan / Proyektil Gas Pabrik:</strong> Pabrik biasa secara berkala meluncurkan awan gas abu-abu (gas projectile) ke arah kiri. Jika pesawat tertabrak oleh pabrik, awan besar, atau proyektil gas pabrik, pesawat akan meledak, layar berkedip merah (screen flash), pesawat berguncang (shake), dan nyawa berkurang 1 poin (Garis 399-433).
+            </li>
+        </ol>
+        <pre>
+<span class="cmt">// GameScene.js - Garis 399: Logika pengurangan nyawa dan feedback visual</span>
+<span class="fn">_loseLife</span>() {
+    <span class="kw">if</span> (<span class="kw">this</span>.isGameOver) <span class="kw">return</span>;
+    <span class="kw">this</span>.lives--;
+
+    <span class="cmt">// 1. Redupkan dan kecilkan ikon hati di HUD</span>
+    <span class="kw">if</span> (<span class="kw">this</span>.lives &gt;= <span class="num">0</span> && <span class="kw">this</span>.lives &lt; <span class="num">3</span>) {
+        <span class="kw">const</span> idx = <span class="kw">this</span>.lives;
+        <span class="kw">this</span>.tweens.<span class="fn">add</span>({
+            targets: <span class="kw">this</span>.lifeTexts[idx],
+            alpha: <span class="num">0.2</span>,
+            scaleX: <span class="num">0.6</span>,
+            scaleY: <span class="num">0.6</span>,
+            duration: <span class="num">400</span>
+        });
+    }
+
+    <span class="cmt">// 2. Efek layar berkedip merah (screen flash)</span>
+    <span class="kw">const</span> flash = <span class="kw">this</span>.add.<span class="fn">graphics</span>().<span class="fn">setDepth</span>(<span class="num">50</span>);
+    flash.<span class="fn">fillStyle</span>(<span class="num">0xff0000</span>, <span class="num">0.35</span>);
+    flash.<span class="fn">fillRect</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="kw">this</span>.scale.width, <span class="kw">this</span>.scale.height);
+    <span class="kw">this</span>.tweens.<span class="fn">add</span>({ targets: flash, alpha: <span class="num">0</span>, duration: <span class="num">400</span>, onComplete: () =&gt; flash.<span class="fn">destroy</span>() });
+
+    <span class="cmt">// 3. Efek guncangan pada gambar pesawat pemain (plane shake)</span>
+    <span class="kw">this</span>.tweens.<span class="fn">add</span>({
+        targets: <span class="kw">this</span>.player,
+        x: <span class="kw">this</span>.player.x + <span class="num">15</span>,
+        yoyo: <span class="kw">true</span>,
+        repeat: <span class="num">3</span>,
+        duration: <span class="num">60</span>
+    });
+
+    <span class="cmt">// 4. Masuk ke Game Over jika nyawa habis</span>
+    <span class="kw">if</span> (<span class="kw">this</span>.lives &lt;= <span class="num">0</span>) {
+        <span class="kw">this</span>.<span class="fn">_gameOver</span>();
+    }
+}</pre>
+
+        <h2>3.8 Sistem Nyawa & Damage Loop</h2>
+        <p>
+            Nyawa awal diatur sebanyak 3 poin (<code>this.lives = 3</code>). HUD di bagian atas kiri layar menampilkan 3 ikon hati (<code>❤️</code>) secara real-time. Jika nyawa mencapai nol, loop permainan utama dihentikan, semua event timer dihapus (menghindari spawn musuh baru), proyektil dibersihkan, efek audio baling-baling dimatikan, dan game beralih ke <code>ScoreScene</code> (Garis 494).
+        </p>
+    </div>
+
+    <!-- ================= PAGE 8: DETAILED CODE ANALYSIS 5 - DIFFICULTY CONFIG ================= -->
+    <div class="page">
+        <h1>3.9 Konfigurasi Tingkat Kesulitan</h1>
+        <p>
+            Menu utama (<code>MenuScene</code>) menyediakan tiga protokol kesulitan yang dapat dipilih pemain. Pilihan ini akan memengaruhi tiga variabel penentu mekanik permainan secara simultan di <code>GameScene</code>:
+        </p>
+        <ol>
+            <li>
+                <strong>Timer Soal (Question Timer):</strong> Menentukan batas waktu berpikir yang diberikan kepada pemain untuk menjawab soal di <code>QuestionScene</code>.
+            </li>
+            <li>
+                <strong>Jeda Muncul Musuh (Spawn Delay):</strong> Menentukan seberapa sering rintangan baru ditambahkan ke layar permainan.
+            </li>
+            <li>
+                <strong>Kecepatan Awal (Base Speed):</strong> Menentukan kecepatan scroll latar belakang serta pergerakan dasar rintangan.
+            </li>
+        </ol>
+        
+        <h3>Tabel Komparasi Pengaturan Parameter Tingkat Kesulitan</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tingkat Kesulitan</th>
+                    <th>Kecepatan Awal</th>
+                    <th>Jeda Spawning</th>
+                    <th>Batas Waktu Soal</th>
+                    <th>Akurasi Nyawa Target</th>
+                    <th>Deskripsi Teknis UI</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="font-weight: bold; color: #10b981;">🌱 EASY_MOD (Mudah)</td>
+                    <td>220 px/dtk</td>
+                    <td>3000 ms (3.0s)</td>
+                    <td>15 Detik / Soal</td>
+                    <td>Sangat Longgar</td>
+                    <td>Pemain memiliki waktu berpikir panjang dan ruang navigasi yang sangat renggang.</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold; color: #f59e0b;">🌤 MED_MOD (Sedang)</td>
+                    <td>300 px/dtk</td>
+                    <td>2200 ms (2.2s)</td>
+                    <td>10 Detik / Soal</td>
+                    <td>Standar Balance</td>
+                    <td>Kecepatan ideal dan direkomendasikan untuk melatih kemampuan motorik dan kognitif iklim.</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold; color: #ef4444;">🔥 HARD_MOD (Sulit)</td>
+                    <td>400 px/dtk</td>
+                    <td>1500 ms (1.5s)</td>
+                    <td>7 Detik / Soal</td>
+                    <td>Sangat Ketat</td>
+                    <td>Rintangan sangat rapat dan waktu menjawab sangat sempit, membutuhkan respons instan.</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="info-box">
+            <div class="info-title">Pengaruh Skor Bonus (Time Bonus Score)</div>
+            Selain parameter fisik game di atas, tingkat kesulitan secara tidak langsung menentukan tingkat perolehan skor bonus. Game memberikan tambahan skor <strong>+50 poin</strong> jika pemain berhasil menjawab dengan benar dalam waktu kurang dari 5 detik sejak soal terbuka. Pada mode Hard, sisa waktu bonus hanya berselisih 2 detik dari batas waktu maksimal (7 detik), membuat bonus ini sangat bergengsi.
+        </div>
+    </div>
+
+    <!-- ================= PAGE 9: GAME LOOP & MINOR DETAILS 1 ================= -->
+    <div class="page">
+        <h1>4. Logika Game (Game Loop) & Detail Kecil</h1>
+        
+        <h2>4.1 Scrolling Background & Parallax</h2>
+        <p>
+            Mekanik penerbangan tak terbatas (endless runner) disimulasikan menggunakan teknik tiling background horizontal sederhana. Terdapat dua gambar latar belakang langit yang sama (<code>this.bg1</code> dan <code>this.bg2</code>) yang ditempatkan bersebelahan.
+        </p>
+        <p>
+            Di dalam metode <code>update()</code>, kedua gambar digeser ke arah kiri secara terus-menerus. Ketika gambar pertama telah bergeser sepenuhnya keluar dari sisi kiri layar, posisinya segera dipindahkan ke sebelah kanan gambar kedua, menciptakan perputaran tak terbatas (endless seamless looping) tanpa putus.
+        </p>
+        <pre>
+<span class="cmt">// GameScene.js - Garis 592: Logika Seamless Loop Background</span>
+<span class="kw">const</span> bgMoveSpeed = <span class="kw">this</span>.gameSpeed * <span class="num">0.35</span>; <span class="cmt">// Latar bergerak lebih lambat (efek kedalaman/parallax)</span>
+<span class="kw">const</span> bgScaledW = <span class="kw">this</span>.bg1.width * <span class="kw">this</span>.bg1.scaleX;
+
+<span class="kw">this</span>.bg1.x -= bgMoveSpeed * dt;
+<span class="kw">this</span>.bg2.x -= bgMoveSpeed * dt;
+
+<span class="cmt">// Jika bg1 sudah keluar layar ke kiri, pindahkan ke kanan bg2</span>
+<span class="kw">if</span> (<span class="kw">this</span>.bg1.x + bgScaledW &lt;= <span class="num">0</span>) {
+    <span class="kw">this</span>.bg1.x = <span class="kw">this</span>.bg2.x + bgScaledW;
+}
+<span class="cmt">// Jika bg2 sudah keluar layar ke kiri, pindahkan ke kanan bg1</span>
+<span class="kw">if</span> (<span class="kw">this</span>.bg2.x + bgScaledW &lt;= <span class="num">0</span>) {
+    <span class="kw">this</span>.bg2.x = <span class="kw">this</span>.bg1.x + bgScaledW;
+}</pre>
+
+        <h2>4.2 Hovering Physics & Kontrol Pesawat</h2>
+        <p>
+            Pesawat tidak menggunakan sistem gravitasi berat bawaan Phaser Arcade Physics agar gerakan terasa ringan seperti pesawat layang futuristik. Kecepatan vertikal (<code>this.playerVY</code>) diatur secara manual berdasarkan input pemain (W/S atau Panah Up/Down).
+        </p>
+        <p>
+            Ketika tombol dilepas, pesawat tidak langsung berhenti mendadak, melainkan melambat secara halus menggunakan faktor redaman (damping factor) sebesar <code>0.85</code>, memberikan kesan melayang (hovering) yang realistis. Selain itu, pesawat dimiringkan ke atas (-12 derajat) saat naik dan dimiringkan ke bawah (+12 derajat) saat turun untuk memberikan umpan balik visual gerak yang halus.
+        </p>
+        <pre>
+<span class="cmt">// GameScene.js - Garis 606: Kontrol penerbangan dan efek hovering</span>
+<span class="kw">if</span> (goingUp) {
+    <span class="kw">this</span>.playerVY = -moveSpeed;
+    <span class="kw">this</span>.player.<span class="fn">setAngle</span>(-<span class="num">12</span>); <span class="cmt">// Miring ke atas</span>
+} <span class="kw">else</span> <span class="kw">if</span> (goingDown) {
+    <span class="kw">this</span>.playerVY = moveSpeed;
+    <span class="kw">this</span>.player.<span class="fn">setAngle</span>(<span class="num">12</span>); <span class="cmt">// Miring ke bawah</span>
+} <span class="kw">else</span> {
+    <span class="kw">this</span>.playerVY *= <span class="num">0.85</span>; <span class="cmt">// Damping - efek melambang melambat halus</span>
+    <span class="kw">this</span>.player.<span class="fn">setAngle</span>(<span class="num">0</span>);  <span class="cmt">// Lurus kembali</span>
+}</pre>
+    </div>
+
+    <!-- ================= PAGE 10: MINOR DETAILS 2 ================= -->
+    <div class="page">
+        <h1>4.3 Efek Ledakan Partikel Vektor</h1>
+        <p>
+            Ketika rintangan hancur tertembak laser atau menabrak pemain, game tidak memuat aset gambar ledakan sprite sheet yang berat. Sebaliknya, game menggambar partikel vektor secara dinamis menggunakan class grafis Phaser.
+        </p>
+        <p>
+            Metode <code>_explodeObstacle()</code> menghasilkan 8 lingkaran partikel kecil berwarna cerah (oranye, merah, kuning, dan hijau) secara acak yang dilontarkan ke segala arah sudut menggunakan fungsi trigonometri sinus dan kosinus, kemudian memudar perlahan (fade out) menggunakan tweening.
+        </p>
+        <pre>
+<span class="cmt">// GameScene.js - Garis 754: Pembuatan ledakan partikel vektor</span>
+<span class="fn">_explodeObstacle</span>(x, y) {
+    <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; <span class="num">8</span>; i++) {
+        <span class="kw">const</span> particle = <span class="kw">this</span>.add.<span class="fn">graphics</span>().<span class="fn">setDepth</span>(<span class="num">15</span>);
+        <span class="cmt">// Memilih warna partikel secara acak</span>
+        particle.<span class="fn">fillStyle</span>(Phaser.Math.RND.<span class="fn">pick</span>([<span class="num">0xff8c00</span>, <span class="num">0xff4444</span>, <span class="num">0xffff00</span>, <span class="num">0x4ade80</span>]), <span class="num">1</span>);
+        particle.<span class="fn">fillCircle</span>(<span class="num">0</span>, <span class="num">0</span>, Phaser.Math.<span class="fn">Between</span>(<span class="num">4</span>, <span class="num">10</span>));
+        particle.x = x;
+        particle.y = y;
+
+        <span class="kw">const</span> angle = (i / <span class="num">8</span>) * Math.PI * <span class="num">2</span>; <span class="cmt">// Membagi lingkaran menjadi 8 arah</span>
+        <span class="kw">const</span> speed = Phaser.Math.<span class="fn">Between</span>(<span class="num">60</span>, <span class="num">150</span>);
+
+        <span class="cmt">// Animasi melempar partikel keluar sambil mengecil dan memudar</span>
+        <span class="kw">this</span>.tweens.<span class="fn">add</span>({
+            targets: particle,
+            x: x + Math.<span class="fn">cos</span>(angle) * speed,
+            y: y + Math.<span class="fn">sin</span>(angle) * speed,
+            alpha: <span class="num">0</span>,
+            scaleX: <span class="num">0.1</span>,
+            scaleY: <span class="num">0.1</span>,
+            duration: Phaser.Math.<span class="fn">Between</span>(<span class="num">400</span>, <span class="num">700</span>),
+            onComplete: () =&gt; particle.<span class="fn">destroy</span>()
+        });
+    }
+}</pre>
+
+        <h2>4.4 Sistem Pause Jeda Game</h2>
+        <p>
+            Fasilitas menjeda game diimplementasikan dengan menekan tombol <code>P</code> atau ikon jeda di HUD. Jeda game akan membekukan seluruh pergerakan musuh, menghentikan akumulasi skor otomatis, menjeda efek audio putaran rotor pesawat (<code>baling_baling</code>), dan menampilkan layar hitam transparan redup (overlay) dengan teks panduan instruksi (Garis 535-578).
+        </p>
+        
+        <h2>4.5 Detail Kecil Lainnya</h2>
+        <ul>
+            <li>
+                <strong>Floating Score Indicator (Skor Melayang):</strong> Ketika pemain berhasil menghancurkan musuh atau menjawab benar, indikator teks melayang (contoh: <code>+100</code> berwarna kuning emas) akan muncul di dekat pesawat dan bergerak naik perlahan sebelum memudar dan terhapus dari memori (Garis 372).
+            </li>
+            <li>
+                <strong>Bobbing Effect (Efek Mengapung):</strong> Saat pesawat diam tidak digerakkan ke atas/bawah, pesawat akan melayang dengan gerakan mengapung naik-turun yang halus secara otomatis menggunakan persamaan matematika gelombang sinus: <code>this.player.y += Math.sin(time / 600) * 0.4</code> (Garis 622).
+            </li>
+            <li>
+                <strong>BGM Looping & State Check:</strong> Game memeriksa status pemutaran musik latar untuk mencegah musik berlipat ganda saat pemain menekan tombol ulang (retry) permainan.
+            </li>
+        </ul>
+    </div>
+
+    <!-- ================= PAGE 11: CONCLUSION ================= -->
+    <div class="page">
+        <h1>5. Kesimpulan & Ringkasan Teknis</h1>
+        <p>
+            Game <strong>Bhumi Raksha: Skies of Tomorrow</strong> berhasil menyajikan sebuah media multimedia interaktif yang edukatif, modern, dan sangat responsif. Melalui integrasi Phaser.js 3 dan logika modular JavaScript, game dapat dioptimalkan dengan baik untuk dimainkan di perangkat desktop maupun mobile secara lancar.
+        </p>
+        
+        <h3>Ringkasan Nilai Parameter Teknis Utama</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Komponen Logika</th>
+                    <th>Nama Metode / Variabel</th>
+                    <th>Parameter Nilai Default</th>
+                    <th>Fungsi Utama dalam Game</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Dimensi Layar</strong></td>
+                    <td><code>config.width / height</code></td>
+                    <td>960px x 640px</td>
+                    <td>Resolusi kanvas game aspek rasio 3:2.</td>
+                </tr>
+                <tr>
+                    <td><strong>Nyawa Pemain</strong></td>
+                    <td><code>this.lives</code></td>
+                    <td>3 Poin Nyawa</td>
+                    <td>Batas ketahanan tabrakan sebelum Game Over.</td>
+                    
+                </tr>
+                <tr>
+                    <td><strong>Kapasitas Laser</strong></td>
+                    <td><code>this.bulletsLeft</code></td>
+                    <td>5 Amunisi (Maksimal)</td>
+                    <td>Membatasi tembakan manual pemain di layar.</td>
+                </tr>
+                <tr>
+                    <td><strong>Skor Kelangsungan Hidup</strong></td>
+                    <td><code>this.scoreTick</code></td>
+                    <td>+5 Poin / Detik</td>
+                    <td>Skor pasif yang diperoleh selama bertahan hidup.</td>
+                </tr>
+                <tr>
+                    <td><strong>Skor Jawaban Benar</strong></td>
+                    <td><code>_onQuestionResolved()</code></td>
+                    <td>+100 Poin (Dasar)</td>
+                    <td>Skor utama jika berhasil menjawab modul soal kuis.</td>
+                </tr>
+                <tr>
+                    <td><strong>Bonus Respons Cepat</strong></td>
+                    <td><code>gotBonus</code></td>
+                    <td>+50 Poin (Tambahan)</td>
+                    <td>Diberikan jika menjawab soal di bawah 5 detik.</td>
+                </tr>
+                <tr>
+                    <td><strong>Perlambatan Kuis</strong></td>
+                    <td><code>this.questionActive</code></td>
+                    <td>15% dari Kecepatan Normal</td>
+                    <td>Mencegah tabrakan saat popup soal aktif.</td>
+                </tr>
+                <tr>
+                    <td><strong>Faktor Damping</strong></td>
+                    <td><code>this.playerVY</code> damping</td>
+                    <td>Faktor pengali 0.85</td>
+                    <td>Menghasilkan perlambatan gerak hover yang mulus.</td>
+                </tr>
+                <tr>
+                    <td><strong>Sudut Kemiringan</strong></td>
+                    <td><code>setAngle()</code></td>
+                    <td>-12° (Naik) / +12° (Turun)</td>
+                    <td>Efek visual hidrodinamis saat manuver pesawat.</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <p style="margin-top: 30px; text-align: center; font-weight: bold; color: #064e3b;">
+            - AKHIR DARI BUKU PANDUAN TEKNIS -
+        </p>
+        <p style="text-align: center; font-size: 9pt; color: #64748b;">
+            Bhumi Raksha: Skies of Tomorrow · Project Green Ascent · 2026
+        </p>
+    </div>
+
+</body>
+</html>
