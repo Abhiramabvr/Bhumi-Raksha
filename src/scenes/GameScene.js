@@ -591,7 +591,7 @@ export class GameScene extends Phaser.Scene {
         const { width, height } = this.scale;
 
         // ============ SCROLLING BACKGROUND ============
-        const bgMoveSpeed = this.gameSpeed * 0.35;
+        const bgMoveSpeed = this.questionActive ? 0 : this.gameSpeed * 0.35;
         const bgScaledW = this.bg1.width * this.bg1.scaleX;
         this.bg1.x -= bgMoveSpeed * dt;
         this.bg2.x -= bgMoveSpeed * dt;
@@ -625,7 +625,7 @@ export class GameScene extends Phaser.Scene {
         }
 
         // ============ BULLETS ============
-        const bulletSpeed = 700;
+        const bulletSpeed = this.questionActive ? 0 : 700;
         this.bullets = this.bullets.filter(b => {
             if (!b.active) return false;
             b.gfx.x += bulletSpeed * dt;
@@ -637,7 +637,7 @@ export class GameScene extends Phaser.Scene {
         });
 
         // ============ GAS PROJECTILES ============
-        const gasSpeed = this.gameSpeed * 1.5;
+        const gasSpeed = this.questionActive ? 0 : (this.gameSpeed * 1.5);
         this.gasProjectiles = this.gasProjectiles.filter(p => {
             p.gfx.x -= gasSpeed * dt;
 
@@ -665,7 +665,7 @@ export class GameScene extends Phaser.Scene {
         // ============ OBSTACLES ============
         for (let i = this.obstacles.length - 1; i >= 0; i--) {
             const o = this.obstacles[i];
-            const obsSpeed = this.questionActive ? this.gameSpeed * 0.15 : o.speed;
+            const obsSpeed = this.questionActive ? 0 : o.speed;
             o.img.x -= obsSpeed * dt;
 
             // Move question mark with obstacle
@@ -675,7 +675,7 @@ export class GameScene extends Phaser.Scene {
             }
 
             // Let the pollution monster shoot gas projectiles
-            if (!o.isSpecial && this.time.now > o.nextFireTime && o.img.x > width * 0.25 && o.img.x < width + 50) {
+            if (!this.questionActive && !o.isSpecial && this.time.now > o.nextFireTime && o.img.x > width * 0.25 && o.img.x < width + 50) {
                 o.nextFireTime = this.time.now + Phaser.Math.Between(1500, 3000);
 
                 const gasGfx = this.add.graphics().setDepth(5);
