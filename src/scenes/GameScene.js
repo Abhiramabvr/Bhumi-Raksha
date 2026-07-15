@@ -89,8 +89,12 @@ export class GameScene extends Phaser.Scene {
         this.keys = this.input.keyboard.addKeys({
             up: Phaser.Input.Keyboard.KeyCodes.UP,
             down: Phaser.Input.Keyboard.KeyCodes.DOWN,
+            left: Phaser.Input.Keyboard.KeyCodes.LEFT,
+            right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
             w: Phaser.Input.Keyboard.KeyCodes.W,
             s: Phaser.Input.Keyboard.KeyCodes.S,
+            a: Phaser.Input.Keyboard.KeyCodes.A,
+            d: Phaser.Input.Keyboard.KeyCodes.D,
             space: Phaser.Input.Keyboard.KeyCodes.SPACE,
             p: Phaser.Input.Keyboard.KeyCodes.P
         });
@@ -113,6 +117,8 @@ export class GameScene extends Phaser.Scene {
         // Touch controls
         this.touchUp = false;
         this.touchDown = false;
+        this.touchLeft = false;
+        this.touchRight = false;
         this._setupTouchControls(width, height);
 
         // ============ LOAD QUESTIONS ============
@@ -218,17 +224,29 @@ export class GameScene extends Phaser.Scene {
         const isMobile = this.sys.game.device.os.android || this.sys.game.device.os.iOS;
 
         if (isMobile) {
-            // Draw clean virtual buttons for Up, Down and Shoot
-            // Up Button: bottom-left area
-            this._createVirtualButton(85, height - 165, 35, '▲', 0x00ffcc, 
+            // Draw clean virtual D-pad for 4-way movement
+            // Up Button: D-pad top
+            this._createVirtualButton(85, height - 150, 30, '▲', 0x00ffcc, 
                 () => { this.touchUp = true; }, 
                 () => { this.touchUp = false; }
             );
 
-            // Down Button: bottom-left area, below Up
-            this._createVirtualButton(85, height - 75, 35, '▼', 0x00ffcc, 
+            // Down Button: D-pad bottom
+            this._createVirtualButton(85, height - 50, 30, '▼', 0x00ffcc, 
                 () => { this.touchDown = true; }, 
                 () => { this.touchDown = false; }
+            );
+
+            // Left Button: D-pad left
+            this._createVirtualButton(35, height - 100, 30, '◀', 0x00ffcc, 
+                () => { this.touchLeft = true; }, 
+                () => { this.touchLeft = false; }
+            );
+
+            // Right Button: D-pad right
+            this._createVirtualButton(135, height - 100, 30, '▶', 0x00ffcc, 
+                () => { this.touchRight = true; }, 
+                () => { this.touchRight = false; }
             );
 
             // Shoot Button: bottom-right area
@@ -600,6 +618,8 @@ export class GameScene extends Phaser.Scene {
         // ============ PLAYER MOVEMENT ============
         if (!this.questionActive) {
             const moveSpeed = 300;
+            
+            // Vertical movement
             const goingUp = this.keys.up.isDown || this.keys.w.isDown || this.touchUp;
             const goingDown = this.keys.down.isDown || this.keys.s.isDown || this.touchDown;
 
@@ -616,6 +636,19 @@ export class GameScene extends Phaser.Scene {
 
             this.player.y += this.playerVY * dt;
             this.player.y = Phaser.Math.Clamp(this.player.y, this.playerMinY, this.playerMaxY);
+
+            // Horizontal movement (Maju & Mundur)
+            const goingLeft = this.keys.left.isDown || this.keys.a.isDown || this.touchLeft;
+            const goingRight = this.keys.right.isDown || this.keys.d.isDown || this.touchRight;
+
+            if (goingLeft) {
+                this.player.x -= moveSpeed * dt;
+            } else if (goingRight) {
+                this.player.x += moveSpeed * dt;
+            }
+
+            // Bound player horizontally within screen limits (e.g. 50 to width - 50)
+            this.player.x = Phaser.Math.Clamp(this.player.x, 50, width - 50);
 
             // Gentle bob animation when hovering
             if (!goingUp && !goingDown) {
