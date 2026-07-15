@@ -22,11 +22,24 @@ export class MenuScene extends Phaser.Scene {
     }
 
     create() {
-        // Start background music
-        if (!this.sound.get('bgm')) {
-            this.sound.play('bgm', { loop: true, volume: 0.65 });
-        } else if (!this.sound.get('bgm').isPlaying) {
-            this.sound.get('bgm').play();
+        // Mute sound initially until play button is pressed
+        this.sound.mute = true;
+
+        const startAudio = () => {
+            this.sound.mute = false;
+            if (!this.sound.get('bgm')) {
+                this.sound.play('bgm', { loop: true, volume: 0.65 });
+            } else if (!this.sound.get('bgm').isPlaying) {
+                this.sound.get('bgm').play();
+            }
+        };
+
+        if (window.gameStarted) {
+            startAudio();
+        } else {
+            window.addEventListener('game-start', () => {
+                startAudio();
+            }, { once: true });
         }
 
         const { width, height } = this.scale;

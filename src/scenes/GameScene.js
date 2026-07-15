@@ -1,6 +1,5 @@
 // GameScene.js - Logic utama: pesawat, obstacle, kontrol, HUD
 import { QuestionManager } from '../utils/QuestionManager.js';
-
 export class GameScene extends Phaser.Scene {
     constructor() {
         super({ key: 'GameScene' });
@@ -71,6 +70,8 @@ export class GameScene extends Phaser.Scene {
         this.playerMaxY = height - 60;
         this.playerVY = 0; // vertical velocity
 
+
+
         // ============ OBSTACLE GROUPS ============
         // We use simple arrays for obstacle objects
         this.obstacles = [];
@@ -89,12 +90,8 @@ export class GameScene extends Phaser.Scene {
         this.keys = this.input.keyboard.addKeys({
             up: Phaser.Input.Keyboard.KeyCodes.UP,
             down: Phaser.Input.Keyboard.KeyCodes.DOWN,
-            left: Phaser.Input.Keyboard.KeyCodes.LEFT,
-            right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
             w: Phaser.Input.Keyboard.KeyCodes.W,
             s: Phaser.Input.Keyboard.KeyCodes.S,
-            a: Phaser.Input.Keyboard.KeyCodes.A,
-            d: Phaser.Input.Keyboard.KeyCodes.D,
             space: Phaser.Input.Keyboard.KeyCodes.SPACE,
             p: Phaser.Input.Keyboard.KeyCodes.P
         });
@@ -117,8 +114,6 @@ export class GameScene extends Phaser.Scene {
         // Touch controls
         this.touchUp = false;
         this.touchDown = false;
-        this.touchLeft = false;
-        this.touchRight = false;
         this._setupTouchControls(width, height);
 
         // ============ LOAD QUESTIONS ============
@@ -224,33 +219,21 @@ export class GameScene extends Phaser.Scene {
         const isMobile = this.sys.game.device.os.android || this.sys.game.device.os.iOS;
 
         if (isMobile) {
-            // Draw clean virtual D-pad for 4-way movement
-            // Up Button: D-pad top
-            this._createVirtualButton(85, height - 150, 30, '▲', 0x00ffcc, 
-                () => { this.touchUp = true; }, 
+            // Draw clean virtual buttons for Up, Down and Shoot
+            // Up Button: bottom-left area
+            this._createVirtualButton(85, height - 165, 35, '▲', 0x00ffcc,
+                () => { this.touchUp = true; },
                 () => { this.touchUp = false; }
             );
 
-            // Down Button: D-pad bottom
-            this._createVirtualButton(85, height - 50, 30, '▼', 0x00ffcc, 
-                () => { this.touchDown = true; }, 
+            // Down Button: bottom-left area, below Up
+            this._createVirtualButton(85, height - 75, 35, '▼', 0x00ffcc,
+                () => { this.touchDown = true; },
                 () => { this.touchDown = false; }
             );
 
-            // Left Button: D-pad left
-            this._createVirtualButton(35, height - 100, 30, '◀', 0x00ffcc, 
-                () => { this.touchLeft = true; }, 
-                () => { this.touchLeft = false; }
-            );
-
-            // Right Button: D-pad right
-            this._createVirtualButton(135, height - 100, 30, '▶', 0x00ffcc, 
-                () => { this.touchRight = true; }, 
-                () => { this.touchRight = false; }
-            );
-
             // Shoot Button: bottom-right area
-            this._createVirtualButton(width - 95, height - 95, 45, 'TEMBAK', 0xef4444, 
+            this._createVirtualButton(width - 95, height - 95, 45, 'TEMBAK', 0xef4444,
                 () => {
                     if (this.isGameOver || this._paused || this.questionActive) return;
                     if (this.bulletsLeft > 0) {
@@ -258,7 +241,7 @@ export class GameScene extends Phaser.Scene {
                         this._shootBullet();
                         this._updateAmmoHUD();
                     }
-                }, 
+                },
                 null
             );
         } else {
@@ -331,7 +314,7 @@ export class GameScene extends Phaser.Scene {
 
         hitArea.on('pointerup', releaseHandler);
         hitArea.on('pointerout', releaseHandler);
-        
+
         return { btn, txt, hitArea };
     }
 
@@ -523,78 +506,78 @@ export class GameScene extends Phaser.Scene {
 
         this.obstacleTimer.remove();
         this.scoreTick.remove();
- 
-         // Stop all tweens on obstacles
-         this.obstacles.forEach(o => {
-             this.tweens.killTweensOf(o.img);
-         });
- 
-         // Destroy gas projectiles
-         this.gasProjectiles.forEach(p => p.gfx.destroy());
-         this.gasProjectiles = [];
- 
-         // Flash screen then go to score
-         this.cameras.main.flash(500, 200, 0, 0);
-         this.time.delayedCall(800, () => {
-             this.cameras.main.fadeOut(500, 0, 0, 0);
-             this.time.delayedCall(500, () => {
-                 this.scene.stop('QuestionScene');
-                 this.scene.start('ScoreScene', {
-                     score: this.score,
-                     correctAnswers: this.correctAnswers,
-                     totalQuestions: this.totalQuestionsAsked,
-                     difficulty: this.difficulty,
-                     questionTime: this.questionTime
-                 });
-             });
-         });
-     }
- 
-     _togglePause() {
-         if (this.isGameOver) return;
-         
-         if (this._paused) {
-             this._paused = false;
-             if (this._pauseText) { this._pauseText.destroy(); this._pauseText = null; }
-             if (this._pauseOverlay) { this._pauseOverlay.destroy(); this._pauseOverlay = null; }
-             this.obstacleTimer.paused = false;
-             this.scoreTick.paused = false;
 
-             // Resume rotor sound
-             if (this.rotorSound && this.rotorSound.isPaused) {
-                 this.rotorSound.resume();
-             }
-         } else {
-             this._paused = true;
-             this.obstacleTimer.paused = true;
-             this.scoreTick.paused = true;
+        // Stop all tweens on obstacles
+        this.obstacles.forEach(o => {
+            this.tweens.killTweensOf(o.img);
+        });
 
-             // Pause rotor sound
-             if (this.rotorSound && this.rotorSound.isPlaying) {
-                 this.rotorSound.pause();
-             }
-             
-             const { width, height } = this.scale;
-             this._pauseOverlay = this.add.graphics().setDepth(100);
-             this._pauseOverlay.fillStyle(0x000000, 0.75);
-             this._pauseOverlay.fillRect(0, 0, width, height);
- 
-             this._pauseText = this.add.text(width / 2, height / 2, '⏸ JEDA\n\nTekan P atau Klik Layar untuk Melanjutkan', {
-                 fontFamily: "Courier New, monospace, sans-serif",
-                 fontSize: '24px',
-                 fontStyle: 'bold',
-                 color: '#00ffcc',
-                 align: 'center'
-             }).setOrigin(0.5).setDepth(101);
- 
-             // Small delay to prevent catching the click that triggered pause
-             this.time.delayedCall(150, () => {
-                 if (this._paused) {
-                     this.input.once('pointerdown', this._resumeFromClick, this);
-                 }
-             });
-         }
-     }
+        // Destroy gas projectiles
+        this.gasProjectiles.forEach(p => p.gfx.destroy());
+        this.gasProjectiles = [];
+
+        // Flash screen then go to score
+        this.cameras.main.flash(500, 200, 0, 0);
+        this.time.delayedCall(800, () => {
+            this.cameras.main.fadeOut(500, 0, 0, 0);
+            this.time.delayedCall(500, () => {
+                this.scene.stop('QuestionScene');
+                this.scene.start('ScoreScene', {
+                    score: this.score,
+                    correctAnswers: this.correctAnswers,
+                    totalQuestions: this.totalQuestionsAsked,
+                    difficulty: this.difficulty,
+                    questionTime: this.questionTime
+                });
+            });
+        });
+    }
+
+    _togglePause() {
+        if (this.isGameOver) return;
+
+        if (this._paused) {
+            this._paused = false;
+            if (this._pauseText) { this._pauseText.destroy(); this._pauseText = null; }
+            if (this._pauseOverlay) { this._pauseOverlay.destroy(); this._pauseOverlay = null; }
+            this.obstacleTimer.paused = false;
+            this.scoreTick.paused = false;
+
+            // Resume rotor sound
+            if (this.rotorSound && this.rotorSound.isPaused) {
+                this.rotorSound.resume();
+            }
+        } else {
+            this._paused = true;
+            this.obstacleTimer.paused = true;
+            this.scoreTick.paused = true;
+
+            // Pause rotor sound
+            if (this.rotorSound && this.rotorSound.isPlaying) {
+                this.rotorSound.pause();
+            }
+
+            const { width, height } = this.scale;
+            this._pauseOverlay = this.add.graphics().setDepth(100);
+            this._pauseOverlay.fillStyle(0x000000, 0.75);
+            this._pauseOverlay.fillRect(0, 0, width, height);
+
+            this._pauseText = this.add.text(width / 2, height / 2, '⏸ JEDA\n\nTekan P atau Klik Layar untuk Melanjutkan', {
+                fontFamily: "Courier New, monospace, sans-serif",
+                fontSize: '24px',
+                fontStyle: 'bold',
+                color: '#00ffcc',
+                align: 'center'
+            }).setOrigin(0.5).setDepth(101);
+
+            // Small delay to prevent catching the click that triggered pause
+            this.time.delayedCall(150, () => {
+                if (this._paused) {
+                    this.input.once('pointerdown', this._resumeFromClick, this);
+                }
+            });
+        }
+    }
 
     _resumeFromClick() {
         if (this._paused) {
@@ -618,8 +601,6 @@ export class GameScene extends Phaser.Scene {
         // ============ PLAYER MOVEMENT ============
         if (!this.questionActive) {
             const moveSpeed = 300;
-            
-            // Vertical movement
             const goingUp = this.keys.up.isDown || this.keys.w.isDown || this.touchUp;
             const goingDown = this.keys.down.isDown || this.keys.s.isDown || this.touchDown;
 
@@ -636,19 +617,6 @@ export class GameScene extends Phaser.Scene {
 
             this.player.y += this.playerVY * dt;
             this.player.y = Phaser.Math.Clamp(this.player.y, this.playerMinY, this.playerMaxY);
-
-            // Horizontal movement (Maju & Mundur)
-            const goingLeft = this.keys.left.isDown || this.keys.a.isDown || this.touchLeft;
-            const goingRight = this.keys.right.isDown || this.keys.d.isDown || this.touchRight;
-
-            if (goingLeft) {
-                this.player.x -= moveSpeed * dt;
-            } else if (goingRight) {
-                this.player.x += moveSpeed * dt;
-            }
-
-            // Bound player horizontally within screen limits (e.g. 50 to width - 50)
-            this.player.x = Phaser.Math.Clamp(this.player.x, 50, width - 50);
 
             // Gentle bob animation when hovering
             if (!goingUp && !goingDown) {
@@ -709,7 +677,7 @@ export class GameScene extends Phaser.Scene {
             // Let the pollution monster shoot gas projectiles
             if (!o.isSpecial && this.time.now > o.nextFireTime && o.img.x > width * 0.25 && o.img.x < width + 50) {
                 o.nextFireTime = this.time.now + Phaser.Math.Between(1500, 3000);
-                
+
                 const gasGfx = this.add.graphics().setDepth(5);
                 gasGfx.fillStyle(0x3a3a3a, 0.95);
                 gasGfx.fillCircle(0, 0, 9);
@@ -717,7 +685,7 @@ export class GameScene extends Phaser.Scene {
                 gasGfx.fillCircle(0, 0, 4);
                 gasGfx.x = o.img.x - o.halfW;
                 gasGfx.y = o.img.y;
-                
+
                 this.gasProjectiles.push({ gfx: gasGfx });
             }
 
@@ -738,6 +706,9 @@ export class GameScene extends Phaser.Scene {
             }
 
             if (destroyedByBullet) {
+                if (!o.isSpecial) {
+                    this._addScore(10);
+                }
                 o.img.destroy();
                 o.qMark?.destroy();
                 this.obstacles.splice(i, 1);
