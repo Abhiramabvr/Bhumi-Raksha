@@ -1,6 +1,6 @@
 // src/main.js - Initialize Phaser and scenes
 import { MenuScene } from './scenes/MenuScene.js?v=1.0.1';
-import { GameScene } from './scenes/GameScene.js?v=1.0.1';
+import { GameScene } from './scenes/GameScene.js?v=1.0.2';
 import { QuestionScene } from './scenes/QuestionScene.js?v=1.0.1';
 import { ScoreScene } from './scenes/ScoreScene.js?v=1.0.1';
 

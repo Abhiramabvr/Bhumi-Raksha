@@ -1,6 +1,5 @@
 // GameScene.js - Logic utama: pesawat, obstacle, kontrol, HUD
 import { QuestionManager } from '../utils/QuestionManager.js';
-
 export class GameScene extends Phaser.Scene {
     constructor() {
         super({ key: 'GameScene' });
@@ -18,6 +17,18 @@ export class GameScene extends Phaser.Scene {
 
     async create() {
         const { width, height } = this.scale;
+
+        // Start background music if not playing (e.g., after Retry)
+        const bgm = this.sound.get('bgm');
+        if (!bgm) {
+            this.sound.play('bgm', { loop: true, volume: 0.65 });
+        } else if (!bgm.isPlaying) {
+            bgm.play({ loop: true, volume: 0.65 });
+        }
+
+        // Start rotor flight sound
+        this.rotorSound = this.sound.add('baling_baling', { loop: true, volume: 0.10 });
+        this.rotorSound.play();
 
         // ============ GAME STATE ============
         this.lives = 3;
@@ -58,6 +69,8 @@ export class GameScene extends Phaser.Scene {
         this.playerMinY = 50;
         this.playerMaxY = height - 60;
         this.playerVY = 0; // vertical velocity
+
+
 
         // ============ OBSTACLE GROUPS ============
         // We use simple arrays for obstacle objects
@@ -203,33 +216,106 @@ export class GameScene extends Phaser.Scene {
     }
 
     _setupTouchControls(width, height) {
-        // Top half = go up, bottom half = go down
-        const upZone = this.add.rectangle(0, 52, width, (height - 52) / 2, 0x000000, 0)
-            .setOrigin(0, 0).setInteractive({ useHandCursor: false }).setDepth(8);
-        const downZone = this.add.rectangle(0, 52 + (height - 52) / 2, width, (height - 52) / 2, 0x000000, 0)
-            .setOrigin(0, 0).setInteractive({ useHandCursor: false }).setDepth(8);
+        const isMobile = this.sys.game.device.os.android || this.sys.game.device.os.iOS;
 
-        upZone.on('pointerdown', () => { this.touchUp = true; });
-        upZone.on('pointerup', () => { this.touchUp = false; });
-        upZone.on('pointerout', () => { this.touchUp = false; });
-        downZone.on('pointerdown', () => { this.touchDown = true; });
-        downZone.on('pointerup', () => { this.touchDown = false; });
-        downZone.on('pointerout', () => { this.touchDown = false; });
+        if (isMobile) {
+            // Draw clean virtual buttons for Up, Down and Shoot
+            // Up Button: bottom-left area
+            this._createVirtualButton(85, height - 165, 35, '▲', 0x00ffcc,
+                () => { this.touchUp = true; },
+                () => { this.touchUp = false; }
+            );
 
-        // Touch indicator arrows
-        this.add.text(30, 70, '▲\nNAIK', {
-            fontFamily: "'Segoe UI', Arial, sans-serif",
-            fontSize: '14px',
-            color: 'rgba(255,255,255,0.3)',
-            align: 'center'
-        }).setDepth(9);
+            // Down Button: bottom-left area, below Up
+            this._createVirtualButton(85, height - 75, 35, '▼', 0x00ffcc,
+                () => { this.touchDown = true; },
+                () => { this.touchDown = false; }
+            );
 
-        this.add.text(30, this.scale.height - 80, '▼\nTURUN', {
-            fontFamily: "'Segoe UI', Arial, sans-serif",
-            fontSize: '14px',
-            color: 'rgba(255,255,255,0.3)',
-            align: 'center'
-        }).setDepth(9);
+            // Shoot Button: bottom-right area
+            this._createVirtualButton(width - 95, height - 95, 45, 'TEMBAK', 0xef4444,
+                () => {
+                    if (this.isGameOver || this._paused || this.questionActive) return;
+                    if (this.bulletsLeft > 0) {
+                        this.bulletsLeft--;
+                        this._shootBullet();
+                        this._updateAmmoHUD();
+                    }
+                },
+                null
+            );
+        } else {
+            // Top half = go up, bottom half = go down
+            const upZone = this.add.rectangle(0, 52, width, (height - 52) / 2, 0x000000, 0)
+                .setOrigin(0, 0).setInteractive({ useHandCursor: false }).setDepth(8);
+            const downZone = this.add.rectangle(0, 52 + (height - 52) / 2, width, (height - 52) / 2, 0x000000, 0)
+                .setOrigin(0, 0).setInteractive({ useHandCursor: false }).setDepth(8);
+
+            upZone.on('pointerdown', () => { this.touchUp = true; });
+            upZone.on('pointerup', () => { this.touchUp = false; });
+            upZone.on('pointerout', () => { this.touchUp = false; });
+            downZone.on('pointerdown', () => { this.touchDown = true; });
+            downZone.on('pointerup', () => { this.touchDown = false; });
+            downZone.on('pointerout', () => { this.touchDown = false; });
+
+            // Touch indicator arrows
+            this.add.text(30, 70, '▲\nNAIK', {
+                fontFamily: "'Segoe UI', Arial, sans-serif",
+                fontSize: '14px',
+                color: 'rgba(255,255,255,0.3)',
+                align: 'center'
+            }).setDepth(9);
+
+            this.add.text(30, this.scale.height - 80, '▼\nTURUN', {
+                fontFamily: "'Segoe UI', Arial, sans-serif",
+                fontSize: '14px',
+                color: 'rgba(255,255,255,0.3)',
+                align: 'center'
+            }).setDepth(9);
+        }
+    }
+
+    _createVirtualButton(x, y, radius, label, color, onPress, onRelease) {
+        const btn = this.add.graphics().setDepth(22);
+        btn.fillStyle(color, 0.4);
+        btn.lineStyle(2, color, 0.8);
+        btn.fillCircle(x, y, radius);
+        btn.strokeCircle(x, y, radius);
+
+        const fontSize = label.length > 2 ? '14px' : '24px';
+        const txt = this.add.text(x, y, label, {
+            fontFamily: "Segoe UI, Arial, sans-serif",
+            fontSize: fontSize,
+            fontStyle: 'bold',
+            color: '#ffffff'
+        }).setOrigin(0.5).setDepth(23);
+
+        const hitArea = this.add.circle(x, y, radius, 0x000000, 0)
+            .setInteractive({ useHandCursor: true })
+            .setDepth(24);
+
+        hitArea.on('pointerdown', () => {
+            btn.clear();
+            btn.fillStyle(color, 0.75);
+            btn.lineStyle(3, 0xffffff, 0.95);
+            btn.fillCircle(x, y, radius);
+            btn.strokeCircle(x, y, radius);
+            if (onPress) onPress();
+        });
+
+        const releaseHandler = () => {
+            btn.clear();
+            btn.fillStyle(color, 0.4);
+            btn.lineStyle(2, color, 0.8);
+            btn.fillCircle(x, y, radius);
+            btn.strokeCircle(x, y, radius);
+            if (onRelease) onRelease();
+        };
+
+        hitArea.on('pointerup', releaseHandler);
+        hitArea.on('pointerout', releaseHandler);
+
+        return { btn, txt, hitArea };
     }
 
     _spawnObstacle() {
@@ -349,6 +435,9 @@ export class GameScene extends Phaser.Scene {
 
     _shootBullet() {
         const { width } = this.scale;
+        // Play laser shot sound
+        this.sound.play('laser', { volume: 0.65 });
+
         // Draw bullet as graphics
         const bullet = this.add.graphics().setDepth(6);
         bullet.fillStyle(0x86efac, 1);
@@ -407,6 +496,14 @@ export class GameScene extends Phaser.Scene {
         if (this.isGameOver) return;
         this.isGameOver = true;
 
+        // Stop sounds
+        const bgm = this.sound.get('bgm');
+        if (bgm) bgm.stop();
+        if (this.rotorSound) this.rotorSound.stop();
+
+        // Play game over sound
+        this.sound.play('game_over', { volume: 0.6 });
+
         this.obstacleTimer.remove();
         this.scoreTick.remove();
 
@@ -438,18 +535,28 @@ export class GameScene extends Phaser.Scene {
 
     _togglePause() {
         if (this.isGameOver) return;
-        
+
         if (this._paused) {
             this._paused = false;
             if (this._pauseText) { this._pauseText.destroy(); this._pauseText = null; }
             if (this._pauseOverlay) { this._pauseOverlay.destroy(); this._pauseOverlay = null; }
             this.obstacleTimer.paused = false;
             this.scoreTick.paused = false;
+
+            // Resume rotor sound
+            if (this.rotorSound && this.rotorSound.isPaused) {
+                this.rotorSound.resume();
+            }
         } else {
             this._paused = true;
             this.obstacleTimer.paused = true;
             this.scoreTick.paused = true;
-            
+
+            // Pause rotor sound
+            if (this.rotorSound && this.rotorSound.isPlaying) {
+                this.rotorSound.pause();
+            }
+
             const { width, height } = this.scale;
             this._pauseOverlay = this.add.graphics().setDepth(100);
             this._pauseOverlay.fillStyle(0x000000, 0.75);
@@ -484,7 +591,7 @@ export class GameScene extends Phaser.Scene {
         const { width, height } = this.scale;
 
         // ============ SCROLLING BACKGROUND ============
-        const bgMoveSpeed = this.gameSpeed * 0.35;
+        const bgMoveSpeed = this.questionActive ? 0 : this.gameSpeed * 0.35;
         const bgScaledW = this.bg1.width * this.bg1.scaleX;
         this.bg1.x -= bgMoveSpeed * dt;
         this.bg2.x -= bgMoveSpeed * dt;
@@ -518,7 +625,7 @@ export class GameScene extends Phaser.Scene {
         }
 
         // ============ BULLETS ============
-        const bulletSpeed = 700;
+        const bulletSpeed = this.questionActive ? 0 : 700;
         this.bullets = this.bullets.filter(b => {
             if (!b.active) return false;
             b.gfx.x += bulletSpeed * dt;
@@ -530,7 +637,7 @@ export class GameScene extends Phaser.Scene {
         });
 
         // ============ GAS PROJECTILES ============
-        const gasSpeed = this.gameSpeed * 1.5;
+        const gasSpeed = this.questionActive ? 0 : (this.gameSpeed * 1.5);
         this.gasProjectiles = this.gasProjectiles.filter(p => {
             p.gfx.x -= gasSpeed * dt;
 
@@ -558,7 +665,7 @@ export class GameScene extends Phaser.Scene {
         // ============ OBSTACLES ============
         for (let i = this.obstacles.length - 1; i >= 0; i--) {
             const o = this.obstacles[i];
-            const obsSpeed = this.questionActive ? this.gameSpeed * 0.15 : o.speed;
+            const obsSpeed = this.questionActive ? 0 : o.speed;
             o.img.x -= obsSpeed * dt;
 
             // Move question mark with obstacle
@@ -568,9 +675,9 @@ export class GameScene extends Phaser.Scene {
             }
 
             // Let the pollution monster shoot gas projectiles
-            if (!o.isSpecial && this.time.now > o.nextFireTime && o.img.x > width * 0.25 && o.img.x < width + 50) {
+            if (!this.questionActive && !o.isSpecial && this.time.now > o.nextFireTime && o.img.x > width * 0.25 && o.img.x < width + 50) {
                 o.nextFireTime = this.time.now + Phaser.Math.Between(1500, 3000);
-                
+
                 const gasGfx = this.add.graphics().setDepth(5);
                 gasGfx.fillStyle(0x3a3a3a, 0.95);
                 gasGfx.fillCircle(0, 0, 9);
@@ -578,7 +685,7 @@ export class GameScene extends Phaser.Scene {
                 gasGfx.fillCircle(0, 0, 4);
                 gasGfx.x = o.img.x - o.halfW;
                 gasGfx.y = o.img.y;
-                
+
                 this.gasProjectiles.push({ gfx: gasGfx });
             }
 
@@ -599,6 +706,9 @@ export class GameScene extends Phaser.Scene {
             }
 
             if (destroyedByBullet) {
+                if (!o.isSpecial) {
+                    this._addScore(10);
+                }
                 o.img.destroy();
                 o.qMark?.destroy();
                 this.obstacles.splice(i, 1);
